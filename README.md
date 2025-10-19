@@ -1,94 +1,82 @@
-# 10x Astro Starter
+## Table of Contents
+- [Project Description](#project-description)
+- [Tech Stack](#tech-stack)
+- [Getting Started Locally](#getting-started-locally)
+- [Available Scripts](#available-scripts)
+- [Project Scope](#project-scope)
+- [Project Status](#project-status)
+- [License](#license)
 
-A modern, opinionated starter template for building fast, accessible, and AI-friendly web applications.
+## Project Description
+
+10xCards is a web application designed to streamline the creation of educational flashcards using Artificial Intelligence. The application allows users to generate flashcards from pasted text, as well as manually create, edit, and delete them. The primary goal of the product is to minimize the time required to prepare study materials and to encourage the use of the spaced repetition method for more effective learning.
 
 ## Tech Stack
 
-- [Astro](https://astro.build/) v5.5.5 - Modern web framework for building fast, content-focused websites
-- [React](https://react.dev/) v19.0.0 - UI library for building interactive components
-- [TypeScript](https://www.typescriptlang.org/) v5 - Type-safe JavaScript
-- [Tailwind CSS](https://tailwindcss.com/) v4.0.17 - Utility-first CSS framework
+The project is built with a modern, scalable, and efficient technology stack:
 
-## Prerequisites
+- **Frontend:**
+  - [Astro](https://astro.build/) 5
+  - [React](https://react.dev/) 19
+  - [TypeScript](https://www.typescriptlang.org/) 5
+  - [Tailwind CSS](https://tailwindcss.com/) 4
+  - [Shadcn/ui](https://ui.shadcn.com/)
+- **Backend:**
+  - [Supabase](https://supabase.com/) (PostgreSQL, Authentication, BaaS)
+- **AI Integration:**
+  - [OpenRouter.ai](https://openrouter.ai/) for access to various large language models.
+- **CI/CD & Hosting:**
+  - [GitHub Actions](https://github.com/features/actions) for CI/CD pipelines.
+  - [DigitalOcean](https://www.digitalocean.com/) for hosting via Docker images.
 
-- Node.js v22.14.0 (as specified in `.nvmrc`)
-- npm (comes with Node.js)
+## Getting Started Locally
 
-## Getting Started
+To set up and run the project on your local machine, follow these steps:
 
-1. Clone the repository:
+**1. Prerequisites:**
+- **Node.js:** Make sure you have Node.js version `22.14.0` installed. We recommend using a version manager like [nvm](https://github.com/nvm-sh/nvm).
+  ```bash
+  nvm use
+  ```
+- **npm:** npm is included with Node.js.
 
-```bash
-git clone https://github.com/przeprogramowani/10x-astro-starter.git
-cd 10x-astro-starter
-```
-
-2. Install dependencies:
-
+**2. Install Dependencies:**
 ```bash
 npm install
 ```
 
-3. Run the development server:
-
+**3. Run the Development Server:**
 ```bash
 npm run dev
 ```
-
-4. Build for production:
-
-```bash
-npm run build
-```
+The application will be available at `http://localhost:4321`.
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-- `npm run lint:fix` - Fix ESLint issues
+The following scripts are available in the `package.json`:
 
-## Project Structure
+- `npm run dev`: Starts the development server.
+- `npm run build`: Builds the application for production.
+- `npm run preview`: Previews the production build locally.
+- `npm run lint`: Lints the code using ESLint.
+- `npm run lint:fix`: Lints the code and automatically fixes issues.
+- `npm run format`: Formats the code using Prettier.
 
-```md
-.
-├── src/
-│   ├── layouts/    # Astro layouts
-│   ├── pages/      # Astro pages
-│   │   └── api/    # API endpoints
-│   ├── components/ # UI components (Astro & React)
-│   └── assets/     # Static assets
-├── public/         # Public assets
-```
+## Project Scope
 
-## AI Development Support
+This project is being developed as an MVP with a defined set of features.
 
-This project is configured with AI development tools to enhance the development experience, providing guidelines for:
+### Included in MVP:
+- **User Accounts:** Registration, login, and account deletion.
+- **AI Flashcard Generation:** Generate flashcard suggestions from pasted text (1,000-10,000 characters).
+- **Flashcard Management:** Manually create, view, edit, and delete flashcards.
+- **Learning System:** An implementation of the SM-2 spaced repetition algorithm.
+- **Legal:** Basic Privacy Policy and Terms of Service.
 
-- Project structure
-- Coding practices
-- Frontend development
-- Styling with Tailwind
-- Accessibility best practices
-- Astro and React guidelines
+## Project Status
 
-### Cursor IDE
-
-The project includes AI rules in `.cursor/rules/` directory that help Cursor IDE understand the project structure and provide better code suggestions.
-
-### GitHub Copilot
-
-AI instructions for GitHub Copilot are available in `.github/copilot-instructions.md`
-
-### Windsurf
-
-The `.windsurfrules` file contains AI configuration for Windsurf.
-
-## Contributing
-
-Please follow the AI guidelines and coding practices defined in the AI configuration files when contributing to this project.
+The project is currently in the **development phase**, focusing on delivering the features outlined for the Minimum Viable Product (MVP).
 
 ## License
 
-MIT
+This project is licensed under the MIT License.
