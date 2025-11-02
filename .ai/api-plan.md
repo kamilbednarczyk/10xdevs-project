@@ -163,12 +163,12 @@
 **Request Payload:**
 ```json
 {
-  "generation_id": 123,
   "flashcards": [
     {
       "front": "string",
       "back": "string",
-      "generation_type": "ai"
+      "generation_type": "ai" | "manual",
+      "generation_id": 123,
     }
   ]
 }

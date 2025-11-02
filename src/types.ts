@@ -89,15 +89,15 @@ export interface CreateFlashcardCommand {
 export interface FlashcardBatchItemCommand {
   front: string;
   back: string;
-  generation_type: "ai";
+  generation_type: "ai" | "manual";
+  generation_id: number | null;
 }
 
 /**
- * Create multiple flashcards from AI generation
+ * Create multiple flashcards in batch
  * Used by: POST /api/flashcards/batch
  */
 export interface CreateFlashcardsBatchCommand {
-  generation_id: number;
   flashcards: FlashcardBatchItemCommand[];
 }
 
