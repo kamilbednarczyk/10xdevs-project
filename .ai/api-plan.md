@@ -156,7 +156,7 @@
 
 **Endpoint:** `POST /api/flashcards/batch`
 
-**Description:** Create multiple flashcards at once, typically from AI-generated proposals. Updates the generation record's accepted_count.
+**Description:** Create multiple flashcards at once (can be of "ai" or "manual" type). Updates the generation record's accepted_count for generation referenced in the created flashcards of "ai" type.
 
 **Authentication:** Required (Supabase Auth)
 
@@ -167,7 +167,7 @@
     {
       "front": "string",
       "back": "string",
-      "generation_type": "ai" | "manual",
+      "generation_type": "ai",
       "generation_id": 123,
     }
   ]
@@ -206,7 +206,6 @@
 - `422 Unprocessable Entity` - Invalid data format
 
 **Validation Rules:**
-- `generation_id`: Required, must exist and belong to user
 - `flashcards`: Required, array with at least 1 item
 - Each flashcard `front`: Required, 1-200 characters
 - Each flashcard `back`: Required, 1-500 characters
