@@ -1,6 +1,21 @@
 import { z } from "zod";
 
 /**
+ * Validation schema for CreateFlashcardCommand
+ * Validates the request body for POST /api/flashcards
+ * Only accepts manual flashcards (AI flashcards are created via batch endpoint)
+ */
+export const CreateFlashcardSchema = z.object({
+  front: z.string().min(1, "Front side cannot be empty").max(200, "Front side must not exceed 200 characters"),
+  back: z.string().min(1, "Back side cannot be empty").max(500, "Back side must not exceed 500 characters"),
+  generation_type: z.literal("manual", {
+    errorMap: () => ({
+      message: "Only manual flashcards are supported. Use the batch endpoint for AI-generated flashcards.",
+    }),
+  }),
+});
+
+/**
  * Validation schema for a single flashcard item in batch creation
  * Validates individual flashcard data within the batch request
  */
@@ -45,5 +60,6 @@ export const CreateFlashcardsBatchSchema = z.object({
 /**
  * Type inference from the schemas
  */
+export type CreateFlashcardSchemaType = z.infer<typeof CreateFlashcardSchema>;
 export type FlashcardBatchItemSchemaType = z.infer<typeof FlashcardBatchItemSchema>;
 export type CreateFlashcardsBatchSchemaType = z.infer<typeof CreateFlashcardsBatchSchema>;

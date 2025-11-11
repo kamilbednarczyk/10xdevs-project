@@ -69,13 +69,14 @@ export interface FlashcardsBatchResponseDTO {
 // ============================================================================
 
 /**
- * Create a single manual flashcard
+ * Create a single flashcard
  * Used by: POST /api/flashcards
  *
+ * Only accepts manual flashcards. AI-generated flashcards should use the batch endpoint.
  * Only includes user-provided fields. Server sets:
  * - id, user_id, created_at, updated_at (auto)
  * - interval, repetition, ease_factor, due_date (SM-2 defaults)
- * - generation_id (null for manual)
+ * - generation_id (null for manual flashcards)
  */
 export interface CreateFlashcardCommand {
   front: string;
@@ -228,7 +229,14 @@ export interface SubmitReviewCommand {
  */
 export interface ErrorResponseDTO {
   error: {
-    code: "VALIDATION_ERROR" | "NOT_FOUND" | "UNAUTHORIZED" | "FORBIDDEN" | "AI_SERVICE_ERROR" | "INTERNAL_ERROR";
+    code:
+      | "VALIDATION_ERROR"
+      | "NOT_FOUND"
+      | "UNAUTHORIZED"
+      | "FORBIDDEN"
+      | "AI_SERVICE_ERROR"
+      | "DATABASE_ERROR"
+      | "INTERNAL_ERROR";
     message: string;
     details?: Record<string, unknown>;
   };
