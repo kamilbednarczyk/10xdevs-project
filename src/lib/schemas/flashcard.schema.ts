@@ -58,8 +58,48 @@ export const CreateFlashcardsBatchSchema = z.object({
 });
 
 /**
+ * Validation schema for GET /api/flashcards query parameters
+ * Validates pagination and sorting parameters
+ */
+export const ListFlashcardsQuerySchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .default("1")
+    .transform((val) => parseInt(val, 10))
+    .pipe(z.number().int().positive({ message: "Page must be a positive integer" })),
+  limit: z
+    .string()
+    .optional()
+    .default("50")
+    .transform((val) => parseInt(val, 10))
+    .pipe(
+      z
+        .number()
+        .int()
+        .positive({ message: "Limit must be a positive integer" })
+        .max(100, { message: "Limit cannot exceed 100" })
+    ),
+  sort: z
+    .string()
+    .optional()
+    .default("created_at")
+    .refine((val) => ["created_at", "due_date", "updated_at"].includes(val), {
+      message: "Sort field must be one of: created_at, due_date, updated_at",
+    }),
+  order: z
+    .string()
+    .optional()
+    .default("desc")
+    .refine((val) => ["asc", "desc"].includes(val), {
+      message: "Order must be either 'asc' or 'desc'",
+    }),
+});
+
+/**
  * Type inference from the schemas
  */
 export type CreateFlashcardSchemaType = z.infer<typeof CreateFlashcardSchema>;
 export type FlashcardBatchItemSchemaType = z.infer<typeof FlashcardBatchItemSchema>;
 export type CreateFlashcardsBatchSchemaType = z.infer<typeof CreateFlashcardsBatchSchema>;
+export type ListFlashcardsQuerySchemaType = z.infer<typeof ListFlashcardsQuerySchema>;

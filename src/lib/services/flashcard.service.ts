@@ -1,5 +1,10 @@
 import type { SupabaseClient } from "../../db/supabase.client";
-import type { CreateFlashcardCommand, CreateFlashcardsBatchCommand, FlashcardResponseDTO } from "../../types";
+import type {
+  CreateFlashcardCommand,
+  CreateFlashcardsBatchCommand,
+  FlashcardResponseDTO,
+  FlashcardListResponseDTO,
+} from "../../types";
 
 /**
  * Flashcard Service Error
@@ -237,5 +242,85 @@ export class FlashcardService {
 
     // Step 6: Return created flashcards
     return createdFlashcards;
+  }
+
+  /**
+   * List user flashcards with pagination and sorting
+   * Retrieves a paginated list of flashcards for the authenticated user
+   *
+   * @param params - Query parameters for pagination and sorting
+   * @param params.userId - The ID of the user whose flashcards to retrieve
+   * @param params.page - Page number (1-indexed)
+   * @param params.limit - Number of items per page (max 100)
+   * @param params.sort - Field to sort by (created_at, due_date, updated_at)
+   * @param params.order - Sort direction (asc, desc)
+   * @returns Paginated list of flashcards with metadata
+   * @throws FlashcardServiceError if database operation fails
+   */
+  async listUserFlashcards(params: {
+    userId: string;
+    page: number;
+    limit: number;
+    sort: string;
+    order: string;
+  }): Promise<FlashcardListResponseDTO> {
+    const { userId, page, limit, sort, order } = params;
+
+    // Step 1: Get total count of flashcards for the user
+    const { count, error: countError } = await this.supabase
+      .from("flashcards")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", userId);
+
+    if (countError) {
+      throw new FlashcardServiceError("Failed to count flashcards", "DATABASE_ERROR", countError);
+    }
+
+    const total = count ?? 0;
+
+    // Step 2: Calculate pagination values
+    const totalPages = Math.ceil(total / limit);
+
+    // If page exceeds total pages and there are flashcards, return empty data
+    // This is not an error, just an out-of-range page request
+    if (page > totalPages && total > 0) {
+      return {
+        data: [],
+        pagination: {
+          page,
+          limit,
+          total,
+          total_pages: totalPages,
+        },
+      };
+    }
+
+    // Step 3: Calculate range for pagination
+    // Supabase uses 0-indexed ranges
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    // Step 4: Fetch flashcards with sorting and pagination
+    const { data: flashcards, error: fetchError } = await this.supabase
+      .from("flashcards")
+      .select("*")
+      .eq("user_id", userId)
+      .order(sort, { ascending: order === "asc" })
+      .range(from, to);
+
+    if (fetchError) {
+      throw new FlashcardServiceError("Failed to fetch flashcards", "DATABASE_ERROR", fetchError);
+    }
+
+    // Step 5: Return response with data and pagination metadata
+    return {
+      data: flashcards ?? [],
+      pagination: {
+        page,
+        limit,
+        total,
+        total_pages: totalPages,
+      },
+    };
   }
 }
