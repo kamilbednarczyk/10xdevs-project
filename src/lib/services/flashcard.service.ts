@@ -28,6 +28,37 @@ export class FlashcardService {
   }
 
   /**
+   * Get a single flashcard by ID
+   * Retrieves a flashcard (RLS ensures it belongs to the authenticated user)
+   *
+   * @param flashcardId - The UUID of the flashcard to retrieve
+   * @returns The flashcard if found and accessible to the user, null otherwise
+   * @throws FlashcardServiceError if database operation fails
+   */
+  async getFlashcardById(flashcardId: string): Promise<FlashcardResponseDTO | null> {
+    // Query database for flashcard with matching id
+    // RLS (Row Level Security) automatically filters by authenticated user
+    const { data: flashcard, error } = await this.supabase
+      .from("flashcards")
+      .select("*")
+      .eq("id", flashcardId)
+      .single();
+
+    if (error) {
+      // If error code is PGRST116, it means no rows were found
+      // This is not an error, just return null
+      if (error.code === "PGRST116") {
+        return null;
+      }
+
+      // Any other error is a database error
+      throw new FlashcardServiceError("Failed to retrieve flashcard from database", "DATABASE_ERROR", error);
+    }
+
+    return flashcard;
+  }
+
+  /**
    * Create a single flashcard
    * Creates a new flashcard with SM-2 algorithm default values
    *
