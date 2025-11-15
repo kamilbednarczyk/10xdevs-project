@@ -452,3 +452,196 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     );
   }
 };
+
+/**
+ * DELETE /api/flashcards/:id
+ * Delete a flashcard permanently
+ *
+ * URL Parameters: id (UUID)
+ * Request Body: None
+ * Success response (204): No Content
+ * Error responses: ErrorResponseDTO
+ *
+ * This endpoint allows users to permanently delete their flashcards.
+ * RLS ensures users can only delete their own flashcards.
+ */
+export const DELETE: APIRoute = async ({ params, locals }) => {
+  try {
+    // Step 1: Verify user authentication
+    // Middleware handles authentication and sets up locals.supabase with user context
+    // RLS policies on the database ensure users can only delete their own flashcards
+    // const {
+    //   data: { session },
+    //   error: sessionError,
+    // } = await locals.supabase.auth.getSession();
+
+    // if (sessionError || !session) {
+    //   return new Response(
+    //     JSON.stringify({
+    //       error: {
+    //         code: "UNAUTHORIZED",
+    //         message: "Authentication required. Please log in to delete flashcards.",
+    //         details: sessionError ? { error: sessionError } : undefined,
+    //       },
+    //     } satisfies ErrorResponseDTO),
+    //     {
+    //       status: 401,
+    //       headers: { "Content-Type": "application/json" },
+    //     }
+    //   );
+    // }
+
+    // Step 2: Validate flashcard ID parameter
+    if (!params.id) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "VALIDATION_ERROR",
+            message: "Flashcard ID is required",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    let flashcardId: string;
+    try {
+      flashcardId = UuidSchema.parse(params.id);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: "VALIDATION_ERROR",
+              message: "Invalid flashcard ID format. Expected a valid UUID.",
+              details: { issues: error.errors },
+            },
+          } satisfies ErrorResponseDTO),
+          {
+            status: 400,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      // Unexpected validation error
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "INTERNAL_ERROR",
+            message: "Unexpected validation error",
+            details: { error: error instanceof Error ? error.message : String(error) },
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Step 3: Call FlashcardService to delete the flashcard
+    const flashcardService = new FlashcardService(locals.supabase);
+
+    let deleted: boolean;
+    try {
+      deleted = await flashcardService.deleteFlashcard(flashcardId);
+    } catch (error) {
+      if (error instanceof FlashcardServiceError) {
+        // Map service error codes to HTTP status codes
+        let statusCode: number;
+        switch (error.code) {
+          case "NOT_FOUND":
+            statusCode = 404;
+            break;
+          case "FORBIDDEN":
+            statusCode = 403;
+            break;
+          case "VALIDATION_ERROR":
+            statusCode = 400;
+            break;
+          case "DATABASE_ERROR":
+            statusCode = 500;
+            break;
+          case "INTERNAL_ERROR":
+            statusCode = 500;
+            break;
+          default:
+            statusCode = 500;
+        }
+
+        return new Response(
+          JSON.stringify({
+            error: {
+              code: error.code,
+              message: error.message,
+              details: error.details as Record<string, unknown> | undefined,
+            },
+          } satisfies ErrorResponseDTO),
+          {
+            status: statusCode,
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+      }
+
+      // Unexpected error
+      // eslint-disable-next-line no-console
+      console.error("Unexpected error in DELETE /api/flashcards/:id:", error);
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "INTERNAL_ERROR",
+            message: "An unexpected error occurred while deleting the flashcard",
+            details: { error: error instanceof Error ? error.message : String(error) },
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Step 4: Check if flashcard was found and deleted
+    if (!deleted) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "NOT_FOUND",
+            message: "Flashcard not found or you do not have permission to delete it",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Step 5: Return success response (204 No Content)
+    return new Response(null, {
+      status: 204,
+    });
+  } catch (error) {
+    // Catch-all for any unhandled errors
+    // eslint-disable-next-line no-console
+    console.error("Critical error in DELETE /api/flashcards/:id:", error);
+    return new Response(
+      JSON.stringify({
+        error: {
+          code: "INTERNAL_ERROR",
+          message: "A critical error occurred",
+          details: { error: error instanceof Error ? error.message : String(error) },
+        },
+      } satisfies ErrorResponseDTO),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+};

@@ -287,6 +287,36 @@ export class FlashcardService {
   }
 
   /**
+   * Delete a flashcard permanently
+   * Deletes a flashcard from the database
+   * RLS ensures only the owner can delete their flashcards
+   *
+   * @param flashcardId - The UUID of the flashcard to delete
+   * @returns true if flashcard was deleted, false if not found or not authorized
+   * @throws FlashcardServiceError if database operation fails
+   */
+  async deleteFlashcard(flashcardId: string): Promise<boolean> {
+    // Delete flashcard from database
+    // RLS (Row Level Security) automatically filters by authenticated user
+    // The delete will only succeed if the flashcard belongs to the user
+    const { error, count } = await this.supabase.from("flashcards").delete({ count: "exact" }).eq("id", flashcardId);
+
+    if (error) {
+      // Any error during deletion is a database error
+      throw new FlashcardServiceError("Failed to delete flashcard from database", "DATABASE_ERROR", error);
+    }
+
+    // If count is 0, the flashcard was not found or doesn't belong to the user
+    // Return false to indicate not found
+    if (count === 0) {
+      return false;
+    }
+
+    // Successfully deleted
+    return true;
+  }
+
+  /**
    * List user flashcards with pagination and sorting
    * Retrieves a paginated list of flashcards for the authenticated user
    *
