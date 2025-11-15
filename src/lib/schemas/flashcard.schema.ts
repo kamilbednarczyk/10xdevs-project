@@ -97,9 +97,20 @@ export const ListFlashcardsQuerySchema = z.object({
 });
 
 /**
+ * Validation schema for UpdateFlashcardCommand
+ * Validates the request body for PUT /api/flashcards/:id
+ * Only allows updating front and back content (SM-2 parameters are updated via review endpoint)
+ */
+export const UpdateFlashcardSchema = z.object({
+  front: z.string().min(1, "Front side cannot be empty").max(200, "Front side must not exceed 200 characters"),
+  back: z.string().min(1, "Back side cannot be empty").max(500, "Back side must not exceed 500 characters"),
+});
+
+/**
  * Type inference from the schemas
  */
 export type CreateFlashcardSchemaType = z.infer<typeof CreateFlashcardSchema>;
 export type FlashcardBatchItemSchemaType = z.infer<typeof FlashcardBatchItemSchema>;
 export type CreateFlashcardsBatchSchemaType = z.infer<typeof CreateFlashcardsBatchSchema>;
 export type ListFlashcardsQuerySchemaType = z.infer<typeof ListFlashcardsQuerySchema>;
+export type UpdateFlashcardSchemaType = z.infer<typeof UpdateFlashcardSchema>;

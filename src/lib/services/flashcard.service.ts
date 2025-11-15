@@ -2,6 +2,7 @@ import type { SupabaseClient } from "../../db/supabase.client";
 import type {
   CreateFlashcardCommand,
   CreateFlashcardsBatchCommand,
+  UpdateFlashcardCommand,
   FlashcardResponseDTO,
   FlashcardListResponseDTO,
 } from "../../types";
@@ -242,6 +243,47 @@ export class FlashcardService {
 
     // Step 6: Return created flashcards
     return createdFlashcards;
+  }
+
+  /**
+   * Update flashcard content
+   * Updates the front and back content of an existing flashcard
+   * RLS ensures only the owner can update their flashcards
+   *
+   * @param flashcardId - The UUID of the flashcard to update
+   * @param command - The update command with new front and back content
+   * @returns The updated flashcard if found and updated, null otherwise
+   * @throws FlashcardServiceError if database operation fails
+   */
+  async updateFlashcard(flashcardId: string, command: UpdateFlashcardCommand): Promise<FlashcardResponseDTO | null> {
+    const { front, back } = command;
+
+    // Update flashcard in database
+    // RLS (Row Level Security) automatically filters by authenticated user
+    // The update will only succeed if the flashcard belongs to the user
+    const { data: updatedFlashcard, error } = await this.supabase
+      .from("flashcards")
+      .update({
+        front,
+        back,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", flashcardId)
+      .select()
+      .single();
+
+    if (error) {
+      // If error code is PGRST116, it means no rows were found or updated
+      // This happens when the flashcard doesn't exist or doesn't belong to the user
+      if (error.code === "PGRST116") {
+        return null;
+      }
+
+      // Any other error is a database error
+      throw new FlashcardServiceError("Failed to update flashcard in database", "DATABASE_ERROR", error);
+    }
+
+    return updatedFlashcard;
   }
 
   /**
