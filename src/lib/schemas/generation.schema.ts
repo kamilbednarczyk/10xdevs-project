@@ -15,3 +15,12 @@ export const CreateGenerationSchema = z.object({
  * Type inference from the schema
  */
 export type CreateGenerationSchemaType = z.infer<typeof CreateGenerationSchema>;
+
+/**
+ * Validation schema for generation ID parameter
+ * Validates the ID parameter for GET /api/generations/:id
+ */
+export const GenerationIdSchema = z.coerce
+  .number()
+  .int("ID must be an integer")
+  .positive("ID must be a positive number");

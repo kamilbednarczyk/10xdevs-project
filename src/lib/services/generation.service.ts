@@ -31,6 +31,37 @@ export class GenerationService {
   }
 
   /**
+   * Get generation details by ID
+   *
+   * @param id - The generation ID to retrieve
+   * @returns Generation object if found, null otherwise
+   * @throws GenerationServiceError if database operation fails
+   */
+  async getGenerationById(id: number): Promise<import("../../types").Generation | null> {
+    try {
+      const { data, error } = await this.supabase.from("generations").select().eq("id", id).single();
+
+      if (error) {
+        // Handle "not found" case - return null instead of throwing
+        if (error.code === "PGRST116") {
+          return null;
+        }
+        throw new GenerationServiceError("Failed to fetch generation from database", "DATABASE_ERROR", error);
+      }
+
+      return data;
+    } catch (error) {
+      // Re-throw GenerationServiceError as-is
+      if (error instanceof GenerationServiceError) {
+        throw error;
+      }
+
+      // Wrap other errors
+      throw new GenerationServiceError("Unexpected error while fetching generation", "INTERNAL_ERROR", error);
+    }
+  }
+
+  /**
    * Generate flashcards from text and create a generation record
    *
    * @param text - The input text to generate flashcards from
@@ -40,7 +71,7 @@ export class GenerationService {
    */
   async generateFromText(
     text: string,
-    userId = "76fede39-2c1e-4c2c-90ed-e45372846068" // Mock user ID for development
+    userId = "79eb5373-0acf-479e-8777-d799cb1739ca" // Mock user ID for development
   ): Promise<GenerationResponseDTO> {
     let proposals: FlashcardProposalDTO[];
 
