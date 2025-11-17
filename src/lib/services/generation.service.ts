@@ -1,5 +1,11 @@
 import type { SupabaseClient } from "../../db/supabase.client";
-import type { GenerationResponseDTO, FlashcardProposalDTO } from "../../types";
+import type {
+  GenerationResponseDTO,
+  FlashcardProposalDTO,
+  GenerationListResponseDTO,
+  GenerationListItemDTO,
+  PaginationDTO,
+} from "../../types";
 import { MockAIService } from "./mock-ai.service";
 
 /**
@@ -28,6 +34,78 @@ export class GenerationService {
   constructor(supabase: SupabaseClient) {
     this.supabase = supabase;
     this.aiService = new MockAIService();
+  }
+
+  /**
+   * List user generations with pagination
+   *
+   * @param userId - The ID of the user whose generations to retrieve
+   * @param page - Page number (1-indexed)
+   * @param limit - Number of items per page
+   * @returns Paginated list of generations with computed acceptance_rate
+   * @throws GenerationServiceError if database operation fails
+   */
+  async listUserGenerations(userId: string, page: number, limit: number): Promise<GenerationListResponseDTO> {
+    try {
+      // Step 1: Get total count of generations for this user
+      const { count, error: countError } = await this.supabase
+        .from("generations")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", userId);
+
+      if (countError) {
+        throw new GenerationServiceError("Failed to count generations", "DATABASE_ERROR", countError);
+      }
+
+      const total = count ?? 0;
+      const totalPages = Math.ceil(total / limit);
+
+      // Step 2: Get paginated generations data
+      const offset = (page - 1) * limit;
+      const { data: generations, error: dataError } = await this.supabase
+        .from("generations")
+        .select("id, generated_count, accepted_count, created_at, updated_at")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (dataError) {
+        throw new GenerationServiceError("Failed to fetch generations from database", "DATABASE_ERROR", dataError);
+      }
+
+      // Step 3: Map results to GenerationListItemDTO with computed acceptance_rate
+      const data: GenerationListItemDTO[] = (generations ?? []).map((gen) => ({
+        id: gen.id,
+        generated_count: gen.generated_count,
+        accepted_count: gen.accepted_count,
+        acceptance_rate:
+          gen.accepted_count !== null && gen.generated_count > 0 ? gen.accepted_count / gen.generated_count : 0,
+        created_at: gen.created_at,
+        updated_at: gen.updated_at,
+      }));
+
+      // Step 4: Build pagination metadata
+      const pagination: PaginationDTO = {
+        page,
+        limit,
+        total,
+        total_pages: totalPages,
+      };
+
+      // Step 5: Return the response
+      return {
+        data,
+        pagination,
+      };
+    } catch (error) {
+      // Re-throw GenerationServiceError as-is
+      if (error instanceof GenerationServiceError) {
+        throw error;
+      }
+
+      // Wrap other errors
+      throw new GenerationServiceError("Unexpected error while listing generations", "INTERNAL_ERROR", error);
+    }
   }
 
   /**
