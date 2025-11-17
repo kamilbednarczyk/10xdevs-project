@@ -5,6 +5,7 @@ import type {
   UpdateFlashcardCommand,
   FlashcardResponseDTO,
   FlashcardListResponseDTO,
+  StudyFlashcardDTO,
 } from "../../types";
 
 /**
@@ -394,5 +395,35 @@ export class FlashcardService {
         total_pages: totalPages,
       },
     };
+  }
+
+  /**
+   * Get flashcards due for review
+   * Retrieves all flashcards for a user that are due for review based on SM-2 algorithm
+   *
+   * @param userId - The ID of the user whose flashcards to retrieve
+   * @param date - The date to check against (ISO 8601 string). Defaults to current date/time if not provided.
+   * @returns Array of due flashcards sorted by due_date (earliest first)
+   * @throws FlashcardServiceError if database operation fails
+   */
+  async getDueFlashcards(userId: string, date?: string): Promise<StudyFlashcardDTO[]> {
+    // Use provided date or default to current date/time
+    const effectiveDate = date ?? new Date().toISOString();
+
+    // Query database for flashcards due for review
+    // Only select fields needed for StudyFlashcardDTO
+    const { data: flashcards, error } = await this.supabase
+      .from("flashcards")
+      .select("id, front, back, interval, repetition, ease_factor, due_date")
+      .eq("user_id", userId)
+      .lte("due_date", effectiveDate)
+      .order("due_date", { ascending: true });
+
+    if (error) {
+      throw new FlashcardServiceError("Failed to retrieve due flashcards from database", "DATABASE_ERROR", error);
+    }
+
+    // Return flashcards array (empty array if no flashcards due)
+    return flashcards ?? [];
   }
 }

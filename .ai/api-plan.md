@@ -438,7 +438,6 @@
 **Response Payload (200 OK):**
 ```json
 {
-  "due_count": 12,
   "flashcards": [
     {
       "id": "uuid",

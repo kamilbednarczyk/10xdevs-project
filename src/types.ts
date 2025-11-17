@@ -183,15 +183,6 @@ export type StudyFlashcardDTO = Pick<
 >;
 
 /**
- * List of flashcards due for review
- * Used by: GET /api/study/due
- */
-export interface DueFlashcardsResponseDTO {
-  due_count: number;
-  flashcards: StudyFlashcardDTO[];
-}
-
-/**
  * Updated SM-2 parameters after review
  * Used by: POST /api/flashcards/:id/review
  */
