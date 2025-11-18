@@ -6,6 +6,9 @@ import type {
   FlashcardResponseDTO,
   FlashcardListResponseDTO,
   StudyFlashcardDTO,
+  ReviewResponseDTO,
+  Flashcard,
+  SubmitReviewCommand,
 } from "../../types";
 
 /**
@@ -425,5 +428,87 @@ export class FlashcardService {
 
     // Return flashcards array (empty array if no flashcards due)
     return flashcards ?? [];
+  }
+
+  /**
+   * Review a flashcard and calculate new SM-2 parameters
+   * Updates flashcard based on user's quality rating (0-5)
+   *
+   * NOTE: This is a MOCK implementation with hardcoded values.
+   * The actual SM-2 algorithm implementation will be added in a separate task.
+   *
+   * @param flashcard - The current flashcard object with SM-2 parameters
+   * @param quality - Quality rating from 0 to 5
+   * @returns Updated SM-2 parameters (interval, repetition, ease_factor, due_date)
+   */
+  reviewFlashcard(
+    flashcard: Flashcard,
+    quality: SubmitReviewCommand["quality"]
+  ): Pick<Flashcard, "interval" | "repetition" | "ease_factor" | "due_date"> {
+    // MOCK IMPLEMENTATION
+    // TODO: Replace with actual SM-2 algorithm in a separate task
+
+    // For now, return hardcoded mock values
+    // This allows the endpoint to be tested while the algorithm is being implemented
+    const mockInterval = 5;
+    const mockRepetition = flashcard.repetition + 1;
+    const mockEaseFactor = 2.36;
+
+    // Calculate mock due_date (5 days from now)
+    const mockDueDate = new Date();
+    mockDueDate.setDate(mockDueDate.getDate() + mockInterval);
+
+    return {
+      interval: mockInterval,
+      repetition: mockRepetition,
+      ease_factor: mockEaseFactor,
+      due_date: mockDueDate.toISOString(),
+    };
+  }
+
+  /**
+   * Update flashcard SM-2 parameters after review
+   * Updates the database with new SM-2 parameters calculated by the review algorithm
+   * RLS ensures only the owner can update their flashcards
+   *
+   * @param flashcardId - The UUID of the flashcard to update
+   * @param reviewParams - The updated SM-2 parameters
+   * @returns The updated flashcard with new SM-2 parameters if found and updated, null otherwise
+   * @throws FlashcardServiceError if database operation fails
+   */
+  async updateFlashcardAfterReview(
+    flashcardId: string,
+    reviewParams: Pick<Flashcard, "interval" | "repetition" | "ease_factor" | "due_date">
+  ): Promise<ReviewResponseDTO | null> {
+    const { interval, repetition, ease_factor, due_date } = reviewParams;
+
+    // Update flashcard SM-2 parameters in database
+    // RLS (Row Level Security) automatically filters by authenticated user
+    // The update will only succeed if the flashcard belongs to the user
+    const { data: updatedFlashcard, error } = await this.supabase
+      .from("flashcards")
+      .update({
+        interval,
+        repetition,
+        ease_factor,
+        due_date,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", flashcardId)
+      .select("id, interval, repetition, ease_factor, due_date, updated_at")
+      .single();
+
+    if (error) {
+      // If error code is PGRST116, it means no rows were found or updated
+      // This happens when the flashcard doesn't exist or doesn't belong to the user
+      if (error.code === "PGRST116") {
+        return null;
+      }
+
+      // Any other error is a database error
+      throw new FlashcardServiceError("Failed to update flashcard after review in database", "DATABASE_ERROR", error);
+    }
+
+    return updatedFlashcard;
   }
 }
