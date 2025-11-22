@@ -1,8 +1,17 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
+import { DashboardClient } from "@/components/dashboard/DashboardClient";
 ---
 
 <Layout>
-  <Welcome />
+  <main class="mx-auto flex min-h-[80vh] w-full max-w-5xl flex-col gap-8 px-4 py-12">
+    <section class="text-center">
+      <p class="text-sm font-semibold uppercase tracking-widest text-primary/80">Panel główny</p>
+      <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">Powtórki gotowe do rozpoczęcia</h1>
+      <p class="mt-3 text-base text-muted-foreground">
+        Sprawdź liczbę fiszek zaplanowanych na dziś i rozpocznij naukę jednym kliknięciem.
+      </p>
+    </section>
+    <DashboardClient client:load />
+  </main>
 </Layout>
