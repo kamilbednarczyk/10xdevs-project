@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { GenerateFlashcardsApp } from "@/components/generation/GenerateFlashcardsApp";
+---
+
+<Layout title="Generuj fiszki (AI)">
+  <main class="mx-auto flex min-h-[80vh] w-full max-w-6xl flex-col gap-10 px-4 py-12 lg:py-16">
+    <section class="text-center">
+      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-primary/80">Generowanie AI</p>
+      <h1 class="mt-3 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+        Przyspiesz tworzenie fiszek przy pomocy AI
+      </h1>
+      <p class="mt-4 text-base text-muted-foreground md:text-lg">
+        Wklej tekst źródłowy, pozwól AI zaproponować fiszki, a następnie wybierz i zapisz najlepsze propozycje do swojej
+        kolekcji.
+      </p>
+    </section>
+    <GenerateFlashcardsApp client:load />
+  </main>
+</Layout>

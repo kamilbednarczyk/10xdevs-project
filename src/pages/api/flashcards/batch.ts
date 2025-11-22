@@ -44,7 +44,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     // }
 
     // const userId = session.user.id;
-    const userId = "76fede39-2c1e-4c2c-90ed-e45372846068";
+    const userId = "79eb5373-0acf-479e-8777-d799cb1739ca";
 
     // Step 2: Parse request body
     let body: unknown;
