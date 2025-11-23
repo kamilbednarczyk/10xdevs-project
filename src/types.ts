@@ -211,6 +211,28 @@ export interface SubmitReviewCommand {
   quality: 0 | 1 | 2 | 3 | 4 | 5;
 }
 
+/**
+ * Study view specific flashcard model
+ * Mirrors StudyFlashcardDTO but kept separate for easier refactors on the UI layer
+ */
+export type StudyFlashcardViewModel = StudyFlashcardDTO;
+
+/**
+ * Supported statuses for the Study Session view state machine
+ */
+export type StudySessionStatus = "loading" | "in_progress" | "submitting" | "ended" | "error";
+
+/**
+ * Main view model for the Study Session UI
+ */
+export interface StudySessionViewModel {
+  flashcards: StudyFlashcardViewModel[];
+  currentCardIndex: number;
+  isAnswerRevealed: boolean;
+  sessionStatus: StudySessionStatus;
+  errorMessage?: string;
+}
+
 // ============================================================================
 // Error Response Types
 // ============================================================================
