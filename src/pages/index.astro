@@ -4,10 +4,16 @@ import { DashboardClient } from "@/components/dashboard/DashboardClient";
 ---
 
 <Layout>
-  <main class="mx-auto flex min-h-[80vh] w-full max-w-5xl flex-col gap-8 px-4 py-12">
+  <main
+    id="dashboard-main"
+    class="mx-auto flex min-h-[80vh] w-full max-w-5xl flex-col gap-8 px-4 py-12"
+    aria-labelledby="dashboard-heading"
+  >
     <section class="text-center">
       <p class="text-sm font-semibold uppercase tracking-widest text-primary/80">Panel główny</p>
-      <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">Powtórki gotowe do rozpoczęcia</h1>
+      <h1 id="dashboard-heading" class="mt-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+        Powtórki gotowe do rozpoczęcia
+      </h1>
       <p class="mt-3 text-base text-muted-foreground">
         Sprawdź liczbę fiszek zaplanowanych na dziś i rozpocznij naukę jednym kliknięciem.
       </p>

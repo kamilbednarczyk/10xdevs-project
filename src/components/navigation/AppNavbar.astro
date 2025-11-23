@@ -1,0 +1,167 @@
+---
+interface Props {
+  currentPath?: string;
+  userEmail?: string;
+}
+
+const props = Astro.props as Props;
+const currentPath = props.currentPath ?? "/";
+const userEmail = props.userEmail ?? "demo@10xcards.app";
+
+const navigationLinks = [
+  { label: "Dashboard", href: "/" },
+  { label: "Moje Fiszki", href: "/flashcards" },
+  { label: "Generuj Fiszki", href: "/generate" },
+];
+
+const mobileMenuId = "mobile-nav-menu";
+const userMenuId = "user-menu";
+
+const isActive = (href: string) => {
+  if (href === "/") {
+    return currentPath === "/";
+  }
+
+  return currentPath.startsWith(href);
+};
+---
+
+<nav
+  class="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/70"
+  aria-label="Główna nawigacja"
+>
+  <div
+    class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:flex-nowrap sm:gap-4 sm:py-0 sm:pl-6 md:px-8"
+  >
+    <a
+      href="/"
+      class="flex items-center gap-2 text-base font-semibold tracking-tight text-foreground transition hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60"
+      aria-label="Przejdź do strony głównej 10xCards"
+    >
+      <span class="rounded-md bg-primary/10 px-2 py-1 text-xs uppercase tracking-[0.2em] text-primary">10x</span>
+      <span>Cards</span>
+    </a>
+
+    <div class="flex min-w-0 flex-1 items-center justify-end gap-2 md:gap-4">
+      <details class="relative md:hidden">
+        <summary
+          class="flex cursor-pointer list-none items-center gap-2 rounded-full border border-border/60 px-3 py-1.5 text-sm font-medium text-foreground transition hover:border-foreground/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60"
+          aria-label="Otwórz menu nawigacji"
+          aria-controls={mobileMenuId}
+          aria-haspopup="menu"
+        >
+          Menu
+          <span aria-hidden="true" class="text-xs text-muted-foreground">▾</span>
+        </summary>
+
+        <div
+          id={mobileMenuId}
+          class="absolute right-0 mt-2 min-w-[13rem] space-y-1 rounded-xl border border-border/80 bg-card p-2 text-sm shadow-lg"
+          role="menu"
+        >
+          {
+            navigationLinks.map((link) => {
+              const active = isActive(link.href);
+              return (
+                <a
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  class={[
+                    "block rounded-lg px-3 py-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60",
+                    active
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+                  ].join(" ")}
+                >
+                  {link.label}
+                </a>
+              );
+            })
+          }
+        </div>
+      </details>
+
+      <ul class="hidden items-center gap-1 text-sm font-medium md:flex" role="list">
+        {
+          navigationLinks.map((link) => {
+            const active = isActive(link.href);
+            return (
+              <li>
+                <a
+                  href={link.href}
+                  aria-current={active ? "page" : undefined}
+                  class={[
+                    "rounded-full px-4 py-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60",
+                    active
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-muted/80 hover:text-foreground",
+                  ].join(" ")}
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      <details class="relative" data-testid="user-menu">
+        <summary
+          class="flex cursor-pointer list-none items-center gap-3 rounded-full border border-border/60 px-3 py-1.5 text-sm font-medium text-foreground transition hover:border-foreground/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60"
+          aria-haspopup="menu"
+          aria-controls={userMenuId}
+        >
+          <div class="flex min-w-0 flex-col leading-tight">
+            <span class="text-xs text-muted-foreground">Zalogowano jako</span>
+            <span class="truncate text-sm font-semibold text-foreground">{userEmail}</span>
+          </div>
+          <span aria-hidden="true" class="text-xs text-muted-foreground">▾</span>
+        </summary>
+
+        <div
+          id={userMenuId}
+          class="absolute right-0 mt-2 w-56 rounded-xl border border-border/80 bg-card p-3 text-sm shadow-lg"
+          role="menu"
+        >
+          <p class="truncate text-muted-foreground">{userEmail}</p>
+          <form method="post" action="/auth/logout" class="mt-3">
+            <button
+              type="submit"
+              class="w-full rounded-full bg-primary px-4 py-2 text-center text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/70"
+            >
+              Wyloguj
+            </button>
+          </form>
+        </div>
+      </details>
+    </div>
+  </div>
+</nav>
+
+<style>
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details[open] > summary {
+    border-color: oklch(0.205 0 0 / 0.5);
+  }
+
+  details[open] > div {
+    animation: scaleIn 160ms ease-out;
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+      transform-origin: top right;
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+      transform-origin: top right;
+    }
+  }
+</style>

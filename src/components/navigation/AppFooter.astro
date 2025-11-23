@@ -1,0 +1,28 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-border/60 bg-background/90">
+  <div
+    class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-6 text-sm text-muted-foreground sm:flex-nowrap sm:px-6 md:px-8"
+  >
+    <p class="text-xs sm:text-sm">
+      © {year} 10xCards. Wszystkie prawa zastrzeżone.
+    </p>
+    <nav class="flex flex-wrap items-center gap-4" aria-label="Linki w stopce">
+      <a
+        class="transition hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60"
+        href="/privacy"
+      >
+        Polityka Prywatności
+      </a>
+      <span aria-hidden="true" class="hidden sm:inline text-border">•</span>
+      <a
+        class="transition hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60"
+        href="/terms"
+      >
+        Regulamin
+      </a>
+    </nav>
+  </div>
+</footer>

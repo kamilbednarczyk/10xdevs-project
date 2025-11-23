@@ -1,0 +1,28 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Regulamin">
+  <main class="mx-auto flex min-h-[60vh] w-full max-w-3xl flex-col gap-6 px-4 py-16" aria-labelledby="terms-heading">
+    <section class="space-y-3 text-center">
+      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-primary/80">Placeholder</p>
+      <h1 id="terms-heading" class="text-3xl font-bold tracking-tight text-foreground md:text-4xl">Regulamin</h1>
+      <p class="text-base text-muted-foreground">
+        Regulamin jest jeszcze w opracowaniu. Pracujemy nad jasnymi i przejrzystymi zasadami korzystania z 10xCards.
+      </p>
+    </section>
+
+    <div class="rounded-3xl border border-border/60 bg-card/60 p-6 text-sm text-muted-foreground">
+      <p>
+        Masz pytania? Napisz do nas na
+        <a
+          class="font-semibold text-foreground underline decoration-primary/40 underline-offset-4"
+          href="mailto:support@10xcards.app"
+        >
+          support@10xcards.app
+        </a>
+        , a wrócimy z odpowiedzią tak szybko, jak tylko będziemy mogli.
+      </p>
+    </div>
+  </main>
+</Layout>

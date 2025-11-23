@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+import AppFooter from "../components/navigation/AppFooter.astro";
+import AppNavbar from "../components/navigation/AppNavbar.astro";
 import { ToastProvider } from "../components/ui/ToastProvider";
 
 interface Props {
@@ -7,6 +9,9 @@ interface Props {
 }
 
 const { title = "10x Astro Starter" } = Astro.props;
+const currentPath = Astro.url.pathname;
+// Keep navigation free in focus-heavy flows (/study, /auth). Update this list when new distraction-free routes are added.
+const hideNavigation = currentPath.startsWith("/study") || currentPath.startsWith("/auth");
 ---
 
 <!doctype html>
@@ -18,8 +23,18 @@ const { title = "10x Astro Starter" } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body>
-    <slot />
+  <body class="bg-background text-foreground antialiased">
+    <a
+      href="#main-content"
+      class="skip-link fixed left-4 top-4 z-50 -translate-y-24 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition focus-visible:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/70"
+    >
+      Pomiń do treści głównej
+    </a>
+    {!hideNavigation && <AppNavbar currentPath={currentPath} />}
+    <div id="main-content" tabindex="-1" class="min-h-[70vh]">
+      <slot />
+    </div>
+    <AppFooter />
     <ToastProvider client:load />
   </body>
 </html>
@@ -30,5 +45,6 @@ const { title = "10x Astro Starter" } = Astro.props;
     margin: 0;
     width: 100%;
     height: 100%;
+    background-color: transparent;
   }
 </style>
