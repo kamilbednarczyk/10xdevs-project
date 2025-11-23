@@ -6,7 +6,7 @@ import type {
   GenerationListItemDTO,
   PaginationDTO,
 } from "../../types";
-import { MockAIService } from "./mock-ai.service";
+import { OpenRouterApiError, OpenRouterService } from "./openrouter.service";
 
 /**
  * Generation Service Error
@@ -16,7 +16,8 @@ export class GenerationServiceError extends Error {
   constructor(
     message: string,
     public code: "AI_SERVICE_ERROR" | "DATABASE_ERROR" | "INTERNAL_ERROR",
-    public details?: unknown
+    public details?: unknown,
+    public status?: number
   ) {
     super(message);
     this.name = "GenerationServiceError";
@@ -27,13 +28,19 @@ export class GenerationServiceError extends Error {
  * Generation Service
  * Handles the business logic for AI flashcard generation
  */
-export class GenerationService {
-  private aiService: MockAIService;
-  private supabase: SupabaseClient;
+// Small interface so we can swap between OpenRouterService and mock implementations.
+interface FlashcardGenerationService {
+  generateFlashcards(text: string): Promise<FlashcardProposalDTO[]>;
+}
 
-  constructor(supabase: SupabaseClient) {
+export class GenerationService {
+  private readonly aiService: FlashcardGenerationService;
+  private readonly supabase: SupabaseClient;
+
+  constructor(supabase: SupabaseClient, aiService?: FlashcardGenerationService) {
     this.supabase = supabase;
-    this.aiService = new MockAIService();
+    // Allow dependency injection for easier testing/fallbacks.
+    this.aiService = aiService ?? new OpenRouterService();
   }
 
   /**
@@ -157,6 +164,9 @@ export class GenerationService {
     try {
       proposals = await this.aiService.generateFlashcards(text);
     } catch (error) {
+      if (error instanceof OpenRouterApiError) {
+        throw new GenerationServiceError(error.message, "AI_SERVICE_ERROR", error.details ?? error, error.status);
+      }
       throw new GenerationServiceError("Failed to generate flashcards from AI service", "AI_SERVICE_ERROR", error);
     }
 

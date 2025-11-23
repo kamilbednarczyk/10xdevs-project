@@ -121,7 +121,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
             },
           } satisfies ErrorResponseDTO),
           {
-            status: statusCode,
+            status: error.status ?? statusCode,
             headers: { "Content-Type": "application/json" },
           }
         );
@@ -270,7 +270,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             },
           } satisfies ErrorResponseDTO),
           {
-            status: statusCode,
+            status: error.status ?? statusCode,
             headers: { "Content-Type": "application/json" },
           }
         );

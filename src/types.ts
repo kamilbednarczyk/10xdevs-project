@@ -37,6 +37,57 @@ export interface FlashcardProposalDTO {
 }
 
 // ============================================================================
+// OpenRouter Chat Completion Types
+// ============================================================================
+
+export type ChatRole = "system" | "user" | "assistant";
+
+export interface ChatMessage {
+  role: ChatRole;
+  content: string;
+}
+
+export interface JsonSchema {
+  name: string;
+  strict?: boolean;
+  schema: Record<string, unknown>;
+}
+
+export interface ResponseFormat {
+  type: "json_schema";
+  json_schema: JsonSchema;
+}
+
+export interface ChatCompletionOptions {
+  model: string;
+  messages: ChatMessage[];
+  response_format?: ResponseFormat;
+  temperature?: number;
+  max_tokens?: number;
+  top_p?: number;
+  stop?: string | string[];
+  stream?: boolean;
+  [key: string]: unknown;
+}
+
+export interface ChatCompletionResponse {
+  id: string;
+  choices: {
+    message: ChatMessage;
+    finish_reason?: string;
+    index?: number;
+  }[];
+  usage?: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
+  created?: number;
+  model?: string;
+  system_fingerprint?: string;
+}
+
+// ============================================================================
 // Flashcards Resource - Response DTOs
 // ============================================================================
 
