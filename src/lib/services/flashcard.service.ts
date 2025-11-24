@@ -434,35 +434,62 @@ export class FlashcardService {
    * Review a flashcard and calculate new SM-2 parameters
    * Updates flashcard based on user's quality rating (0-5)
    *
-   * NOTE: This is a MOCK implementation with hardcoded values.
-   * The actual SM-2 algorithm implementation will be added in a separate task.
+   * Implements the SM-2 spaced repetition algorithm:
+   * - Quality < 3: Reset repetition to 0, set interval to 1 day
+   * - Quality >= 3: Increase repetition, calculate interval based on ease factor
+   * - Ease factor is adjusted based on quality (min: 1.3)
    *
    * @param flashcard - The current flashcard object with SM-2 parameters
-   * @param quality - Quality rating from 0 to 5
+   * @param quality - Quality rating from 0 to 5 (0=complete blackout, 5=perfect response)
    * @returns Updated SM-2 parameters (interval, repetition, ease_factor, due_date)
    */
   reviewFlashcard(
     flashcard: Flashcard,
     quality: SubmitReviewCommand["quality"]
   ): Pick<Flashcard, "interval" | "repetition" | "ease_factor" | "due_date"> {
-    // MOCK IMPLEMENTATION
-    // TODO: Replace with actual SM-2 algorithm in a separate task
+    // Extract current SM-2 parameters
+    let { interval, repetition, ease_factor } = flashcard;
 
-    // For now, return hardcoded mock values
-    // This allows the endpoint to be tested while the algorithm is being implemented
-    const mockInterval = 5;
-    const mockRepetition = flashcard.repetition + 1;
-    const mockEaseFactor = 2.36;
+    // Step 1: Update ease factor based on quality
+    // Formula: EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+    // This adjusts the ease factor based on how well the user recalled the card
+    ease_factor = ease_factor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
 
-    // Calculate mock due_date (5 days from now)
-    const mockDueDate = new Date();
-    mockDueDate.setDate(mockDueDate.getDate() + mockInterval);
+    // Ensure ease factor doesn't go below minimum threshold
+    if (ease_factor < 1.3) {
+      ease_factor = 1.3;
+    }
+
+    // Step 2: Calculate new interval and repetition based on quality
+    if (quality < 3) {
+      // Failed recall: Reset progress
+      repetition = 0;
+      interval = 1; // Review again tomorrow
+    } else {
+      // Successful recall: Increase repetition and calculate new interval
+      repetition += 1;
+
+      if (repetition === 1) {
+        // First successful review: 1 day
+        interval = 1;
+      } else if (repetition === 2) {
+        // Second successful review: 6 days
+        interval = 6;
+      } else {
+        // Subsequent reviews: multiply previous interval by ease factor
+        interval = Math.round(interval * ease_factor);
+      }
+    }
+
+    // Step 3: Calculate due date based on new interval
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + interval);
 
     return {
-      interval: mockInterval,
-      repetition: mockRepetition,
-      ease_factor: mockEaseFactor,
-      due_date: mockDueDate.toISOString(),
+      interval,
+      repetition,
+      ease_factor,
+      due_date: dueDate.toISOString(),
     };
   }
 
