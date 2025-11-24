@@ -17,7 +17,6 @@ export function StudyView() {
     revealAnswer,
     submitReview,
     retry,
-    restartSession,
   } = useStudySession();
 
   if (sessionStatus === "loading") {
@@ -38,7 +37,6 @@ export function StudyView() {
     return (
       <SessionSummary
         totalFlashcards={progress.total}
-        onRestart={restartSession}
         secondaryActionHref="/flashcards"
         secondaryActionLabel="Zobacz wszystkie fiszki"
       />
@@ -74,7 +72,6 @@ export function StudyView() {
           </div>
         ) : null}
         <div className="space-y-3">
-          <h2 className="text-2xl font-bold text-foreground md:text-3xl">Skup się na jednej fiszce naraz</h2>
           <p className="text-base text-muted-foreground">
             Najpierw spróbuj przypomnieć sobie odpowiedź, a dopiero potem odkryj rewers i oceń swoją pamięć.
           </p>

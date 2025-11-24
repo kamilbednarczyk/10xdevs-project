@@ -31,39 +31,7 @@ export function FlashcardDisplay({ flashcard, isRevealed }: FlashcardDisplayProp
             <p className="text-base font-medium">Kliknij &quot;Pokaż odpowiedź&quot;, gdy będziesz gotowy.</p>
           )}
         </div>
-        <dl className="grid gap-4 text-sm text-muted-foreground md:grid-cols-4">
-          <div>
-            <dt className="font-medium text-foreground">Interwał</dt>
-            <dd>{flashcard.interval} dni</dd>
-          </div>
-          <div>
-            <dt className="font-medium text-foreground">Powtórzenia</dt>
-            <dd>{flashcard.repetition}</dd>
-          </div>
-          <div>
-            <dt className="font-medium text-foreground">Wsp. łatwości</dt>
-            <dd>{flashcard.ease_factor.toFixed(2)}</dd>
-          </div>
-          <div>
-            <dt className="font-medium text-foreground">Termin</dt>
-            <dd>{formatShortDate(flashcard.due_date)}</dd>
-          </div>
-        </dl>
       </CardContent>
     </Card>
   );
-}
-
-function formatShortDate(value: string) {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "brak danych";
-  }
-
-  return new Intl.DateTimeFormat("pl-PL", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
 }

@@ -3,14 +3,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 
 interface SessionSummaryProps {
   totalFlashcards: number;
-  onRestart?: () => void;
   secondaryActionHref?: string;
   secondaryActionLabel?: string;
 }
 
 export function SessionSummary({
   totalFlashcards,
-  onRestart,
   secondaryActionHref = "/flashcards",
   secondaryActionLabel = "Przejdź do listy fiszek",
 }: SessionSummaryProps) {
@@ -39,18 +37,11 @@ export function SessionSummary({
           </p>
         )}
       </CardContent>
-      {(onRestart || secondaryActionHref) && (
+      {secondaryActionHref && (
         <CardFooter className="flex flex-col gap-3 md:flex-row md:justify-center">
-          {onRestart ? (
-            <Button variant="outline" onClick={onRestart}>
-              Rozpocznij ponownie
-            </Button>
-          ) : null}
-          {secondaryActionHref ? (
-            <Button variant="ghost" asChild>
-              <a href={secondaryActionHref}>{secondaryActionLabel}</a>
-            </Button>
-          ) : null}
+          <Button variant="ghost" asChild>
+            <a href={secondaryActionHref}>{secondaryActionLabel}</a>
+          </Button>
         </CardFooter>
       )}
     </Card>
