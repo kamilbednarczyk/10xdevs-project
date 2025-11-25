@@ -1,0 +1,10 @@
+---
+import AuthLayout from "../layouts/AuthLayout.astro";
+import RegisterForm from "@/components/auth/RegisterForm";
+
+export const prerender = false;
+---
+
+<AuthLayout title="Zarejestruj się | 10xDevs" description="Załóż konto w 10xDevs">
+  <RegisterForm client:load />
+</AuthLayout>

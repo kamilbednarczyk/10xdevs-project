@@ -1,0 +1,10 @@
+---
+import AuthLayout from "../layouts/AuthLayout.astro";
+import LoginForm from "@/components/auth/LoginForm";
+
+export const prerender = false;
+---
+
+<AuthLayout title="Zaloguj się | 10xDevs" description="Dostęp do konta 10xDevs">
+  <LoginForm client:load />
+</AuthLayout>

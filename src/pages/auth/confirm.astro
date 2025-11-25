@@ -1,0 +1,10 @@
+---
+import AuthLayout from "../../layouts/AuthLayout.astro";
+import UpdatePasswordForm from "@/components/auth/UpdatePasswordForm";
+
+export const prerender = false;
+---
+
+<AuthLayout title="Ustaw nowe hasło | 10xDevs" description="Zabezpiecz swoje konto, ustawiając nowe hasło do 10xDevs">
+  <UpdatePasswordForm client:load />
+</AuthLayout>
