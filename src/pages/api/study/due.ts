@@ -22,23 +22,22 @@ export const prerender = false;
 export const GET: APIRoute = async ({ url, locals }) => {
   try {
     // Step 1: Verify user authentication
-    // if (!locals.user) {
-    //   return new Response(
-    //     JSON.stringify({
-    //       error: {
-    //         code: "UNAUTHORIZED",
-    //         message: "Authentication required. Please log in to view due flashcards.",
-    //       },
-    //     } satisfies ErrorResponseDTO),
-    //     {
-    //       status: 401,
-    //       headers: { "Content-Type": "application/json" },
-    //     }
-    //   );
-    // }
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Authentication required. Please log in to view due flashcards.",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
-    // const userId = locals.user.id;
-    const userId = "79eb5373-0acf-479e-8777-d799cb1739ca";
+    const userId = locals.user.id;
 
     // Step 2: Extract and validate query parameters
     const queryParams = {

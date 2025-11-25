@@ -35,7 +35,7 @@ export function LoginForm() {
     setServerSuccess(null);
 
     try {
-      const response = await fetch("/api/auth/signin", {
+      const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -51,7 +51,7 @@ export function LoginForm() {
       setServerSuccess("Logowanie zakończone sukcesem. Przekierowujemy Cię do panelu...");
 
       window.setTimeout(() => {
-        window.location.assign("/dashboard");
+        window.location.assign("/");
       }, 800);
     } catch (error) {
       setServerError(getUnknownErrorMessage(error, "Nie udało się połączyć z serwerem. Spróbuj ponownie."));

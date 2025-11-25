@@ -21,29 +21,22 @@ export const prerender = false;
 export const GET: APIRoute = async ({ url, locals }) => {
   try {
     // Step 1: Verify user authentication
-    // const {
-    //   data: { session },
-    //   error: sessionError,
-    // } = await locals.supabase.auth.getSession();
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Authentication required. Please log in to view generations.",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
-    // if (sessionError || !session) {
-    //   return new Response(
-    //     JSON.stringify({
-    //       error: {
-    //         code: "UNAUTHORIZED",
-    //         message: "Authentication required. Please log in to view generations.",
-    //         details: sessionError ? { error: sessionError } : undefined,
-    //       },
-    //     } satisfies ErrorResponseDTO),
-    //     {
-    //       status: 401,
-    //       headers: { "Content-Type": "application/json" },
-    //     }
-    //   );
-    // }
-
-    // const userId = session.user.id;
-    const userId = "79eb5373-0acf-479e-8777-d799cb1739ca";
+    const userId = locals.user.id;
 
     // Step 2: Extract and validate query parameters
     const queryParams = {
@@ -180,7 +173,25 @@ export const GET: APIRoute = async ({ url, locals }) => {
  */
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    // Step 1: Parse request body
+    // Step 1: Verify user authentication
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Authentication required. Please log in to generate flashcards.",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    const userId = locals.user.id;
+
+    // Step 2: Parse request body
     let body: unknown;
     try {
       body = await request.json();
@@ -200,7 +211,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    // Step 2: Validate request body
+    // Step 3: Validate request body
     let validatedData: { text: string };
     try {
       validatedData = CreateGenerationSchema.parse(body);
@@ -237,12 +248,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    // Step 3: Call GenerationService
+    // Step 4: Call GenerationService
     const generationService = new GenerationService(locals.supabase);
 
     let result: GenerationResponseDTO;
     try {
-      result = await generationService.generateFromText(validatedData.text);
+      result = await generationService.generateFromText(validatedData.text, userId);
     } catch (error) {
       if (error instanceof GenerationServiceError) {
         // Map service error codes to HTTP status codes
@@ -294,7 +305,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       );
     }
 
-    // Step 4: Return success response
+    // Step 5: Return success response
     return new Response(JSON.stringify(result), {
       status: 201,
       headers: { "Content-Type": "application/json" },

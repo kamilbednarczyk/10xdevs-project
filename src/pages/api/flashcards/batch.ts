@@ -22,29 +22,22 @@ export const prerender = false;
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
     // Step 1: Verify user authentication
-    // const {
-    //   data: { session },
-    //   error: sessionError,
-    // } = await locals.supabase.auth.getSession();
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Authentication required. Please log in to create flashcards.",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
-    // if (sessionError || !session) {
-    //   return new Response(
-    //     JSON.stringify({
-    //       error: {
-    //         code: "UNAUTHORIZED",
-    //         message: "Authentication required. Please log in to create flashcards.",
-    //         details: sessionError ? { error: sessionError } : undefined,
-    //       },
-    //     } satisfies ErrorResponseDTO),
-    //     {
-    //       status: 401,
-    //       headers: { "Content-Type": "application/json" },
-    //     }
-    //   );
-    // }
-
-    // const userId = session.user.id;
-    const userId = "79eb5373-0acf-479e-8777-d799cb1739ca";
+    const userId = locals.user.id;
 
     // Step 2: Parse request body
     let body: unknown;

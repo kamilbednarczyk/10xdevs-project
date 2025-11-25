@@ -15,21 +15,19 @@ export const prerender = false;
 export async function GET({ params, locals }: APIContext): Promise<Response> {
   try {
     // Step 1: Check authentication
-    // Note: Authentication is currently disabled for development
-    // When auth is enabled, uncomment the following code:
-    // const user = locals.user;
-    // if (!user) {
-    //   const errorResponse: ErrorResponseDTO = {
-    //     error: {
-    //       code: "UNAUTHORIZED",
-    //       message: "Authentication required to access this resource",
-    //     },
-    //   };
-    //   return new Response(JSON.stringify(errorResponse), {
-    //     status: 401,
-    //     headers: { "Content-Type": "application/json" },
-    //   });
-    // }
+    const user = locals.user;
+    if (!user) {
+      const errorResponse: ErrorResponseDTO = {
+        error: {
+          code: "UNAUTHORIZED",
+          message: "Authentication required to access this resource",
+        },
+      };
+      return new Response(JSON.stringify(errorResponse), {
+        status: 401,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
 
     // Step 2: Validate the ID parameter
     const validationResult = GenerationIdSchema.safeParse(params.id);

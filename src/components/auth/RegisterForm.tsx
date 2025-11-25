@@ -43,6 +43,7 @@ export function RegisterForm() {
         body: JSON.stringify({
           email: values.email,
           password: values.password,
+          confirmPassword: values.confirmPassword,
         }),
       });
 
@@ -52,11 +53,9 @@ export function RegisterForm() {
         return;
       }
 
-      setServerSuccess("Gotowe! Zakładamy Twoje konto i logujemy Cię automatycznie...");
-
-      window.setTimeout(() => {
-        window.location.assign("/dashboard");
-      }, 900);
+      setServerSuccess(
+        "Gotowe! Wysłaliśmy do Ciebie wiadomość z linkiem aktywacyjnym. Potwierdź adres email, aby móc się zalogować."
+      );
     } catch (error) {
       setServerError(getUnknownErrorMessage(error, "Nie udało się połączyć z serwerem. Spróbuj ponownie."));
     }

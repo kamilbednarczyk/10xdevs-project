@@ -10,6 +10,7 @@ interface Props {
 
 const { title = "10x Astro Starter" } = Astro.props;
 const currentPath = Astro.url.pathname;
+const userEmail = Astro.locals.user?.email ?? undefined;
 // Keep navigation free in focus-heavy flows (/study, /auth). Update this list when new distraction-free routes are added.
 const hideNavigation = currentPath.startsWith("/study") || currentPath.startsWith("/auth");
 ---
@@ -30,7 +31,7 @@ const hideNavigation = currentPath.startsWith("/study") || currentPath.startsWit
     >
       Pomiń do treści głównej
     </a>
-    {!hideNavigation && <AppNavbar currentPath={currentPath} />}
+    {!hideNavigation && <AppNavbar currentPath={currentPath} userEmail={userEmail} />}
     <div id="main-content" tabindex="-1" class="min-h-[70vh]">
       <slot />
     </div>

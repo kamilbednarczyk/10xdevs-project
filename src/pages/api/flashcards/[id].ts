@@ -24,26 +24,20 @@ export const GET: APIRoute = async ({ params, locals }) => {
     // Step 1: Verify user authentication
     // Middleware handles authentication and sets up locals.supabase with user context
     // RLS policies on the database ensure users can only access their own flashcards
-    // const {
-    //   data: { session },
-    //   error: sessionError,
-    // } = await locals.supabase.auth.getSession();
-
-    // if (sessionError || !session) {
-    //   return new Response(
-    //     JSON.stringify({
-    //       error: {
-    //         code: "UNAUTHORIZED",
-    //         message: "Authentication required. Please log in to access flashcards.",
-    //         details: sessionError ? { error: sessionError } : undefined,
-    //       },
-    //     } satisfies ErrorResponseDTO),
-    //     {
-    //       status: 401,
-    //       headers: { "Content-Type": "application/json" },
-    //     }
-    //   );
-    // }
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Authentication required. Please log in to access flashcards.",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
     // Step 2: Validate flashcard ID parameter
     if (!params.id) {
@@ -219,26 +213,20 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     // Step 1: Verify user authentication
     // Middleware handles authentication and sets up locals.supabase with user context
     // RLS policies on the database ensure users can only update their own flashcards
-    // const {
-    //   data: { session },
-    //   error: sessionError,
-    // } = await locals.supabase.auth.getSession();
-
-    // if (sessionError || !session) {
-    //   return new Response(
-    //     JSON.stringify({
-    //       error: {
-    //         code: "UNAUTHORIZED",
-    //         message: "Authentication required. Please log in to update flashcards.",
-    //         details: sessionError ? { error: sessionError } : undefined,
-    //       },
-    //     } satisfies ErrorResponseDTO),
-    //     {
-    //       status: 401,
-    //       headers: { "Content-Type": "application/json" },
-    //     }
-    //   );
-    // }
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Authentication required. Please log in to update flashcards.",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
     // Step 2: Validate flashcard ID parameter
     if (!params.id) {
@@ -470,26 +458,20 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
     // Step 1: Verify user authentication
     // Middleware handles authentication and sets up locals.supabase with user context
     // RLS policies on the database ensure users can only delete their own flashcards
-    // const {
-    //   data: { session },
-    //   error: sessionError,
-    // } = await locals.supabase.auth.getSession();
-
-    // if (sessionError || !session) {
-    //   return new Response(
-    //     JSON.stringify({
-    //       error: {
-    //         code: "UNAUTHORIZED",
-    //         message: "Authentication required. Please log in to delete flashcards.",
-    //         details: sessionError ? { error: sessionError } : undefined,
-    //       },
-    //     } satisfies ErrorResponseDTO),
-    //     {
-    //       status: 401,
-    //       headers: { "Content-Type": "application/json" },
-    //     }
-    //   );
-    // }
+    if (!locals.user) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "UNAUTHORIZED",
+            message: "Authentication required. Please log in to delete flashcards.",
+          },
+        } satisfies ErrorResponseDTO),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+    }
 
     // Step 2: Validate flashcard ID parameter
     if (!params.id) {

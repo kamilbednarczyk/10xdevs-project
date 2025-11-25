@@ -150,14 +150,11 @@ export class GenerationService {
    * Generate flashcards from text and create a generation record
    *
    * @param text - The input text to generate flashcards from
-   * @param userId - The ID of the user creating the generation (temporary mock value for development)
+   * @param userId - The ID of the user creating the generation
    * @returns Generation response with proposals
    * @throws GenerationServiceError if generation or database operation fails
    */
-  async generateFromText(
-    text: string,
-    userId = "79eb5373-0acf-479e-8777-d799cb1739ca" // Mock user ID for development
-  ): Promise<GenerationResponseDTO> {
+  async generateFromText(text: string, userId: string): Promise<GenerationResponseDTO> {
     let proposals: FlashcardProposalDTO[];
 
     // Step 1: Call AI service to generate proposals
