@@ -75,8 +75,22 @@ Następujące funkcjonalności celowo NIE wchodzą w zakres MVP:
 - Tytuł: Wylogowanie z systemu
 - Opis: Jako zalogowany użytkownik, chcę móc wylogować się z aplikacji, aby zabezpieczyć swoje konto.
 - Kryteria akceptacji:
-  - W interfejsie użytkownika dostępny jest przycisk "Wyloguj".
-  - Po kliknięciu przycisku sesja użytkownika jest kończona i jest on przekierowywany na stronę główną lub stronę logowania.
+  - W interfejsie użytkownika dostępny jest przycisk "Wyloguj" - na pasku nawigacyjnym na górze strony.
+  - Po kliknięciu przycisku sesja użytkownika jest kończona i jest on przekierowywany na stronę logowania.
+
+- ID: US-012
+- Tytuł: Reset hasła
+- Opis: Jako użytkownik, który zapomniał hasła, chcę móc zresetować swoje hasło, aby odzyskać dostęp do konta.
+- Kryteria akceptacji:
+  - Na stronie logowania dostępny jest link "Zapomniałeś hasła?".
+  - Po kliknięciu użytkownik jest przekierowany do formularza resetowania hasła.
+  - Formularz wymaga podania adresu e-mail powiązanego z kontem.
+  - Po przesłaniu formularza, Supabase wysyła e-mail z linkiem do resetowania hasła.
+  - Użytkownik otrzymuje komunikat potwierdzający wysłanie e-maila (nawet jeśli adres nie istnieje w systemie, ze względów bezpieczeństwa).
+  - Link w e-mailu przekierowuje użytkownika do strony z formularzem ustawienia nowego hasła.
+  - Formularz nowego hasła wymaga podania hasła (z potwierdzeniem).
+  - Nowe hasło musi spełniać te same wymogi bezpieczeństwa co przy rejestracji.
+  - Po pomyślnej zmianie hasła użytkownik jest przekierowany do strony logowania z komunikatem o sukcesie.
 
 ### Generowanie fiszek
 
