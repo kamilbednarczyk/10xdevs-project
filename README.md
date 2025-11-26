@@ -3,6 +3,7 @@
 - [Tech Stack](#tech-stack)
 - [Getting Started Locally](#getting-started-locally)
 - [Available Scripts](#available-scripts)
+- [Testing](#testing)
 - [Project Scope](#project-scope)
 - [Project Status](#project-status)
 - [License](#license)
@@ -25,6 +26,11 @@ The project is built with a modern, scalable, and efficient technology stack:
   - [Supabase](https://supabase.com/) (PostgreSQL, Authentication, BaaS)
 - **AI Integration:**
   - [OpenRouter.ai](https://openrouter.ai/) for access to various large language models.
+- **Testing:**
+  - [Vitest](https://vitest.dev/) for unit and integration tests.
+  - [Testing Library](https://testing-library.com/) for React component testing.
+  - [Playwright](https://playwright.dev/) for end-to-end tests.
+  - [MSW](https://mswjs.io/) for API mocking in tests.
 - **CI/CD & Hosting:**
   - [GitHub Actions](https://github.com/features/actions) for CI/CD pipelines.
   - [DigitalOcean](https://www.digitalocean.com/) for hosting via Docker images.
@@ -61,6 +67,70 @@ The following scripts are available in the `package.json`:
 - `npm run lint`: Lints the code using ESLint.
 - `npm run lint:fix`: Lints the code and automatically fixes issues.
 - `npm run format`: Formats the code using Prettier.
+- `npm run test`: Runs unit and integration tests using Vitest.
+- `npm run test:ui`: Runs tests with Vitest UI interface.
+- `npm run test:coverage`: Generates test coverage report.
+- `npm run test:e2e`: Runs end-to-end tests using Playwright.
+- `npm run test:e2e:ui`: Runs E2E tests with Playwright UI mode.
+
+## Testing
+
+The project implements a comprehensive testing strategy to ensure quality and stability:
+
+### Unit and Integration Tests
+
+- **Framework:** Vitest with Testing Library
+- **Coverage:** Services, schemas (Zod validation), hooks, and UI components
+- **Key areas tested:**
+  - Authentication and authorization logic
+  - Flashcard management services
+  - AI generation services (OpenRouter integration)
+  - Study session logic (SM-2 algorithm)
+  - Form validation schemas
+  - React hooks and components
+
+### End-to-End Tests
+
+- **Framework:** Playwright
+- **Coverage:** Complete user journeys across the application
+- **Key scenarios tested:**
+  - User registration and login flow
+  - Creating, editing, and deleting flashcards
+  - AI-powered flashcard generation from text
+  - Study session with spaced repetition
+  - Navigation and protected routes
+
+### Running Tests
+
+```bash
+# Run unit tests
+npm run test
+
+# Run unit tests with UI
+npm run test:ui
+
+# Generate coverage report
+npm run test:coverage
+
+# Run E2E tests
+npm run test:e2e
+
+# Run E2E tests in UI mode
+npm run test:e2e:ui
+```
+
+### Test Environment
+
+- Separate Supabase test instance for integration tests
+- Mocked API responses using MSW for unit tests
+- Test OpenRouter API key with cost limits
+- Automated test execution in CI/CD pipeline (GitHub Actions)
+
+### Quality Metrics
+
+- Target: 80% code coverage for critical services and hooks
+- All E2E tests must pass before merging to main branch
+- Zero P0/P1 (critical/blocking) bugs in production
 
 ## Project Scope
 
