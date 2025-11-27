@@ -67,11 +67,14 @@ The following scripts are available in the `package.json`:
 - `npm run lint`: Lints the code using ESLint.
 - `npm run lint:fix`: Lints the code and automatically fixes issues.
 - `npm run format`: Formats the code using Prettier.
-- `npm run test`: Runs unit and integration tests using Vitest.
-- `npm run test:ui`: Runs tests with Vitest UI interface.
-- `npm run test:coverage`: Generates test coverage report.
-- `npm run test:e2e`: Runs end-to-end tests using Playwright.
-- `npm run test:e2e:ui`: Runs E2E tests with Playwright UI mode.
+- `npm test` / `npm run test:unit`: Runs the Vitest suite in CI mode.
+- `npm run test:unit:watch`: Starts Vitest in watch mode.
+- `npm run test:unit:ui`: Opens the Vitest UI debugger.
+- `npm run test:unit:coverage`: Generates the HTML/LCOV coverage report.
+- `npm run test:e2e`: Runs the Playwright smoke suite headlessly (Chromium only).
+- `npm run test:e2e:headed`: Runs the Playwright suite in headed Chromium.
+- `npm run test:e2e:debug`: Launches Playwright headed with the inspector open.
+- `npm run test:e2e:report`: Re-opens the last Playwright HTML report.
 
 ## Testing
 
@@ -103,21 +106,23 @@ The project implements a comprehensive testing strategy to ensure quality and st
 ### Running Tests
 
 ```bash
-# Run unit tests
-npm run test
+# Unit tests
+npm run test:unit
+npm run test:unit:watch
+npm run test:unit:ui
+npm run test:unit:coverage
 
-# Run unit tests with UI
-npm run test:ui
+# First-time browser install for E2E tests
+npx playwright install chromium
 
-# Generate coverage report
-npm run test:coverage
-
-# Run E2E tests
+# E2E tests
 npm run test:e2e
-
-# Run E2E tests in UI mode
-npm run test:e2e:ui
+npm run test:e2e:headed
+npm run test:e2e:debug
+npm run test:e2e:report
 ```
+
+> Playwright starts the Astro dev server automatically on port `4321`. If you already have a local dev server running, set `PLAYWRIGHT_BASE_URL` and `PLAYWRIGHT_PORT` to reuse it.
 
 ### Test Environment
 
