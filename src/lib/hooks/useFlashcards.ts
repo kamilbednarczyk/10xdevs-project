@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import type {
-  CreateFlashcardCommand,
-  FlashcardResponseDTO,
-  PaginationDTO,
-  UpdateFlashcardCommand,
-} from "@/types";
+import type { CreateFlashcardCommand, FlashcardResponseDTO, PaginationDTO, UpdateFlashcardCommand } from "@/types";
 import { useToast } from "./useToast";
 
 const DEFAULT_PAGE_SIZE = 10;
@@ -337,4 +332,3 @@ export function useFlashcards(options?: UseFlashcardsOptions): UseFlashcardsResu
     deleteFlashcard,
   };
 }
-
