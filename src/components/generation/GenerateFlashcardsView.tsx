@@ -161,11 +161,6 @@ export function GenerateFlashcardsView() {
               <p className="font-medium text-foreground">
                 {state.status === "success" ? "Fiszki zapisane!" : "Brak wygenerowanych propozycji."}
               </p>
-              <p className="mt-2">
-                {state.status === "success"
-                  ? "Możesz wkleić kolejny tekst i wygenerować następną partię fiszek."
-                  : "Wklej tekst źródłowy i kliknij „Generuj fiszki”, aby zobaczyć propozycje AI."}
-              </p>
             </div>
           )}
         </CardContent>

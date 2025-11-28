@@ -177,7 +177,7 @@ export class OpenRouterService {
         }
 
         if (!parsedBody || typeof parsedBody !== "object") {
-          throw new OpenRouterApiError(500, "OpenRouter API returned an empty or invalid payload.", rawBody);
+          throw new OpenRouterApiError(500, "Service returned an empty or invalid payload.", rawBody);
         }
 
         return parsedBody as ChatCompletionResponse;
@@ -251,7 +251,7 @@ export class OpenRouterService {
     }
 
     if (parsed.length === 0) {
-      throw new OpenRouterApiError(502, "OpenRouter returned an empty flashcard list.", parsed);
+      throw new OpenRouterApiError(502, "Service returned an empty flashcard list.", parsed);
     }
 
     parsed.forEach((item, index) => {

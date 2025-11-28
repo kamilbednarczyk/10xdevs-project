@@ -81,22 +81,52 @@ const mapProposalToViewModel = (proposal: FlashcardProposalDTO): FlashcardPropos
     errors: {},
   });
 
+const getUserFriendlyErrorMessage = (errorCode?: string, status?: number): string => {
+  // Map technical error codes to user-friendly Polish messages
+  switch (errorCode) {
+    case "AI_SERVICE_ERROR":
+      return "Nie udało się wygenerować fiszek.";
+    case "DATABASE_ERROR":
+      return "Wystąpił problem z zapisem danych. Spróbuj ponownie.";
+    case "VALIDATION_ERROR":
+      return "Wprowadzone dane są nieprawidłowe. Sprawdź tekst źródłowy.";
+    case "UNAUTHORIZED":
+      return "Sesja wygasła. Zaloguj się ponownie.";
+    case "INTERNAL_ERROR":
+      return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
+    default:
+      // Map by HTTP status code if error code is not recognized
+      if (status === 503) {
+        return "Usługa AI jest chwilowo niedostępna. Spróbuj ponownie za chwilę.";
+      }
+      if (status === 429) {
+        return "Zbyt wiele żądań. Poczekaj chwilę i spróbuj ponownie.";
+      }
+      if (status && status >= 500) {
+        return "Wystąpił problem z serwerem. Spróbuj ponownie później.";
+      }
+      if (status && status >= 400) {
+        return "Wystąpił błąd podczas przetwarzania żądania.";
+      }
+      return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
+  }
+};
+
 const parseErrorResponse = async (response: Response): Promise<string> => {
   try {
     const payload = (await response.json()) as Partial<ErrorResponseDTO>;
 
-    if (payload?.error?.message) {
-      return payload.error.message;
+    if (payload?.error?.code) {
+      return getUserFriendlyErrorMessage(payload.error.code, response.status);
     }
   } catch {
     // Ignore JSON parsing issues and fall back below.
   }
 
-  return `Wystąpił błąd (status: ${response.status}). Spróbuj ponownie później.`;
+  return getUserFriendlyErrorMessage(undefined, response.status);
 };
 
-const getUnexpectedErrorMessage = (cause: unknown) =>
-  cause instanceof Error ? cause.message : "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
+const getUnexpectedErrorMessage = () => "Wystąpił problem z połączeniem. Sprawdź internet i spróbuj ponownie.";
 
 export interface UseGenerateFlashcardsResult {
   state: GenerateFlashcardsViewModel;
@@ -127,7 +157,7 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsResult {
   const updateSourceText = useCallback((text: string) => {
     setState((prev) => ({
       ...prev,
-      sourceText: text.slice(0, MAX_SOURCE_TEXT_LENGTH),
+      sourceText: text,
     }));
   }, []);
 
@@ -216,11 +246,11 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsResult {
         proposals,
         error: null,
       }));
-    } catch (cause) {
+    } catch {
       setState((prev) => ({
         ...prev,
         status: "idle",
-        error: getUnexpectedErrorMessage(cause),
+        error: getUnexpectedErrorMessage(),
       }));
     }
   }, [isValidSourceText, state.sourceText]);
@@ -271,11 +301,11 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsResult {
       }
 
       setState(createInitialState("success"));
-    } catch (cause) {
+    } catch {
       setState((prev) => ({
         ...prev,
         status: "proposalsReady",
-        error: getUnexpectedErrorMessage(cause),
+        error: getUnexpectedErrorMessage(),
       }));
     }
   }, [canSave, selectedProposals, state.generationId]);
