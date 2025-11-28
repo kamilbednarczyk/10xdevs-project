@@ -62,9 +62,11 @@ const isActive = (href: string) => {
           {
             navigationLinks.map((link) => {
               const active = isActive(link.href);
+              const testId = link.href === "/" ? "nav-dashboard" : `nav-${link.href.slice(1)}`;
               return (
                 <a
                   href={link.href}
+                  data-testid={testId}
                   aria-current={active ? "page" : undefined}
                   class={[
                     "block rounded-lg px-3 py-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60",
@@ -85,10 +87,12 @@ const isActive = (href: string) => {
         {
           navigationLinks.map((link) => {
             const active = isActive(link.href);
+            const testId = link.href === "/" ? "nav-dashboard" : `nav-${link.href.slice(1)}`;
             return (
               <li>
                 <a
                   href={link.href}
+                  data-testid={testId}
                   aria-current={active ? "page" : undefined}
                   class={[
                     "rounded-full px-4 py-2 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary/60",

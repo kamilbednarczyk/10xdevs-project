@@ -31,11 +31,12 @@ export function SourceTextForm({ sourceText, isValid, isLoading, onTextChange, o
   );
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
+    <form className="space-y-4" onSubmit={handleSubmit} data-testid="source-text-form">
       <div className="space-y-2">
         <Textarea
           id="source-text"
           name="source-text"
+          data-testid="source-text-input"
           value={sourceText}
           onChange={(event) => onTextChange(event.target.value)}
           placeholder="Wklej fragment podręcznika, artykułu lub notatek..."
@@ -45,13 +46,18 @@ export function SourceTextForm({ sourceText, isValid, isLoading, onTextChange, o
         />
       </div>
       <div className="flex flex-col gap-4 rounded-2xl border border-border/60 bg-muted/30 px-4 py-4 text-sm text-muted-foreground md:grid md:grid-cols-[minmax(0,1fr)_auto] md:items-center md:gap-6">
-        <div id={counterId} aria-live="polite">
+        <div id={counterId} aria-live="polite" data-testid="character-count">
           <p className="text-xs uppercase tracking-wide text-muted-foreground/80">Liczba znaków</p>
           <p className={`text-base font-semibold ${!isValid ? "text-destructive" : "text-foreground"}`}>
             {charactersCount.toLocaleString("pl-PL")} / {MAX_SOURCE_TEXT_LENGTH.toLocaleString("pl-PL")}
           </p>
         </div>
-        <Button type="submit" className="w-full md:w-auto md:justify-self-end" disabled={!isValid || isLoading}>
+        <Button
+          type="submit"
+          className="w-full md:w-auto md:justify-self-end"
+          disabled={!isValid || isLoading}
+          data-testid="generate-flashcards-button"
+        >
           {isLoading ? "Generowanie..." : "Generuj fiszki"}
         </Button>
       </div>

@@ -15,7 +15,7 @@ function ProposalsListComponent({ proposals, onUpdateProposal, isDisabled = fals
   }
 
   return proposals.length ? (
-    <div className="space-y-5">
+    <div className="space-y-5" data-testid="proposals-list">
       {proposals.map((proposal) => (
         <ProposalCard key={proposal.id} proposal={proposal} onUpdate={onUpdateProposal} isDisabled={isDisabled} />
       ))}

@@ -25,11 +25,13 @@ export function ProposalCard({ proposal, onUpdate, isDisabled = false }: Proposa
   return (
     <article
       aria-label={ariaLabel}
+      data-testid="proposal-card"
       className="rounded-2xl border border-border/60 bg-card/80 px-5 py-4 shadow-sm transition hover:shadow-lg focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10 md:px-6 md:py-5"
     >
       <div className="flex flex-col gap-5 md:grid md:grid-cols-[auto,minmax(0,1fr)] md:items-start md:gap-6">
         <Checkbox
           aria-label="Zaznacz fiszkę do zapisania"
+          data-testid="proposal-checkbox"
           checked={proposal.isSelected}
           onChange={(event) => onUpdate(proposal.id, { isSelected: event.target.checked })}
           disabled={isDisabled}
@@ -45,6 +47,7 @@ export function ProposalCard({ proposal, onUpdate, isDisabled = false }: Proposa
             </div>
             <Input
               value={proposal.front}
+              data-testid="proposal-front-input"
               onChange={(event) => onUpdate(proposal.id, { front: event.target.value })}
               placeholder="Pytanie, hasło lub pojęcie..."
               maxLength={MAX_PROPOSAL_FRONT_LENGTH}
@@ -68,6 +71,7 @@ export function ProposalCard({ proposal, onUpdate, isDisabled = false }: Proposa
             </div>
             <Input
               value={proposal.back}
+              data-testid="proposal-back-input"
               onChange={(event) => onUpdate(proposal.id, { back: event.target.value })}
               placeholder="Odpowiedź lub wyjaśnienie..."
               maxLength={MAX_PROPOSAL_BACK_LENGTH}

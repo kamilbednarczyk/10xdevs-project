@@ -35,7 +35,12 @@ export function ActionsFooter({ totalCount, selectedCount, canSave, isSaving, on
         )}
       </div>
       <div className="w-full md:w-auto">
-        <Button className="w-full md:min-w-48" disabled={!canSave || isSaving} onClick={onSave}>
+        <Button
+          className="w-full md:min-w-48"
+          disabled={!canSave || isSaving}
+          onClick={onSave}
+          data-testid="save-selected-button"
+        >
           {isSaving ? "Zapisywanie..." : "Zapisz zaznaczone"}
         </Button>
       </div>
