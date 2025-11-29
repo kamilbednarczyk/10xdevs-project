@@ -62,7 +62,7 @@ const isActive = (href: string) => {
           {
             navigationLinks.map((link) => {
               const active = isActive(link.href);
-              const testId = link.href === "/" ? "nav-dashboard" : `nav-${link.href.slice(1)}`;
+              const testId = link.href === "/" ? "mobile-nav-dashboard" : `mobile-nav-${link.href.slice(1)}`;
               return (
                 <a
                   href={link.href}
