@@ -81,40 +81,38 @@ const mapProposalToViewModel = (proposal: FlashcardProposalDTO): FlashcardPropos
     errors: {},
   });
 
-const getUserFriendlyErrorMessage = (errorCode?: string, status?: number): string => {
-  // Map technical error codes to user-friendly Polish messages
-  switch (errorCode) {
-    case "AI_SERVICE_ERROR":
-      return "Nie udało się wygenerować fiszek.";
-    case "DATABASE_ERROR":
-      return "Wystąpił problem z zapisem danych. Spróbuj ponownie.";
-    case "VALIDATION_ERROR":
-      return "Wprowadzone dane są nieprawidłowe. Sprawdź tekst źródłowy.";
-    case "UNAUTHORIZED":
-      return "Sesja wygasła. Zaloguj się ponownie.";
-    case "INTERNAL_ERROR":
-      return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
-    default:
-      // Map by HTTP status code if error code is not recognized
-      if (status === 503) {
-        return "Usługa AI jest chwilowo niedostępna. Spróbuj ponownie za chwilę.";
-      }
-      if (status === 429) {
-        return "Zbyt wiele żądań. Poczekaj chwilę i spróbuj ponownie.";
-      }
-      if (status && status >= 500) {
-        return "Wystąpił problem z serwerem. Spróbuj ponownie później.";
-      }
-      if (status && status >= 400) {
-        return "Wystąpił błąd podczas przetwarzania żądania.";
-      }
-      return "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
+const DEFAULT_UNEXPECTED_ERROR_MESSAGE = "Wystąpił nieoczekiwany błąd. Spróbuj ponownie.";
+
+const ERROR_CODE_MESSAGES: Record<string, string> = {
+  AI_SERVICE_ERROR: "AI service is temporarily unavailable",
+  DATABASE_ERROR: "Failed to save flashcards",
+  VALIDATION_ERROR: "Wprowadzone dane są nieprawidłowe. Sprawdź tekst źródłowy.",
+  UNAUTHORIZED: "Sesja wygasła. Zaloguj się ponownie.",
+  INTERNAL_ERROR: DEFAULT_UNEXPECTED_ERROR_MESSAGE,
+};
+
+const getStatusErrorMessage = (status?: number): string => {
+  if (typeof status === "number" && status >= 400) {
+    return `Wystąpił błąd (status: ${status}). Spróbuj ponownie później.`;
   }
+  return DEFAULT_UNEXPECTED_ERROR_MESSAGE;
+};
+
+const getUserFriendlyErrorMessage = (errorCode?: string, status?: number): string => {
+  if (errorCode && ERROR_CODE_MESSAGES[errorCode]) {
+    return ERROR_CODE_MESSAGES[errorCode];
+  }
+  return getStatusErrorMessage(status);
 };
 
 const parseErrorResponse = async (response: Response): Promise<string> => {
   try {
     const payload = (await response.json()) as Partial<ErrorResponseDTO>;
+    const message = payload?.error?.message?.trim();
+
+    if (message) {
+      return message;
+    }
 
     if (payload?.error?.code) {
       return getUserFriendlyErrorMessage(payload.error.code, response.status);
@@ -126,7 +124,12 @@ const parseErrorResponse = async (response: Response): Promise<string> => {
   return getUserFriendlyErrorMessage(undefined, response.status);
 };
 
-const getUnexpectedErrorMessage = () => "Wystąpił problem z połączeniem. Sprawdź internet i spróbuj ponownie.";
+const getUnexpectedErrorMessage = (error: unknown) => {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  return DEFAULT_UNEXPECTED_ERROR_MESSAGE;
+};
 
 export interface UseGenerateFlashcardsResult {
   state: GenerateFlashcardsViewModel;
@@ -157,7 +160,7 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsResult {
   const updateSourceText = useCallback((text: string) => {
     setState((prev) => ({
       ...prev,
-      sourceText: text,
+      sourceText: text.slice(0, MAX_SOURCE_TEXT_LENGTH),
     }));
   }, []);
 
@@ -246,11 +249,11 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsResult {
         proposals,
         error: null,
       }));
-    } catch {
+    } catch (error) {
       setState((prev) => ({
         ...prev,
         status: "idle",
-        error: getUnexpectedErrorMessage(),
+        error: getUnexpectedErrorMessage(error),
       }));
     }
   }, [isValidSourceText, state.sourceText]);
@@ -301,11 +304,11 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsResult {
       }
 
       setState(createInitialState("success"));
-    } catch {
+    } catch (error) {
       setState((prev) => ({
         ...prev,
         status: "proposalsReady",
-        error: getUnexpectedErrorMessage(),
+        error: getUnexpectedErrorMessage(error),
       }));
     }
   }, [canSave, selectedProposals, state.generationId]);
