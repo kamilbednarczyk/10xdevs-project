@@ -20,7 +20,7 @@ export function StudyView() {
   } = useStudySession();
 
   if (sessionStatus === "loading") {
-    return <LoadingSpinner message="Ładuję fiszki zaplanowane na dziś..." />;
+    return <LoadingSpinner message="Ładuję fiszki zaplanowane na dziś..." testId="study-loading-spinner" />;
   }
 
   if (sessionStatus === "error") {
@@ -44,7 +44,7 @@ export function StudyView() {
   }
 
   if (!currentFlashcard) {
-    return <LoadingSpinner message="Przygotowuję kolejną fiszkę..." />;
+    return <LoadingSpinner message="Przygotowuję kolejną fiszkę..." testId="study-next-card-spinner" />;
   }
 
   const isSubmitting = sessionStatus === "submitting";
@@ -53,19 +53,23 @@ export function StudyView() {
   const nextReviewLabel = formatDueDate(currentFlashcard.due_date);
 
   return (
-    <section className="space-y-10 rounded-3xl border border-border/60 bg-card/60 p-6 shadow-xl lg:p-10">
-      <header className="space-y-4 text-center">
+    <section
+      className="space-y-10 rounded-3xl border border-border/60 bg-card/60 p-6 shadow-xl lg:p-10"
+      data-testid="study-session-panel"
+    >
+      <header className="space-y-4 text-center" data-testid="study-session-progress">
         {showProgress ? (
-          <div className="space-y-2">
+          <div className="space-y-2" data-testid="study-progress-indicator">
             <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.4em] text-muted-foreground/80">
               <span>
                 Fiszka {progress.current} z {progress.total}
               </span>
               <span>{progressPercent}%</span>
             </div>
-            <div className="h-2 w-full rounded-full bg-muted">
+            <div className="h-2 w-full rounded-full bg-muted" data-testid="study-progress-bar">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-primary to-primary/60 transition-all"
+                data-testid="study-progress-bar-fill"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
@@ -80,19 +84,26 @@ export function StudyView() {
 
       <FlashcardDisplay flashcard={currentFlashcard} isRevealed={isAnswerRevealed} />
 
-      <div className="space-y-6">
+      <div className="space-y-6" data-testid="study-actions-section">
         <div className="flex flex-col items-center gap-6">
           {isAnswerRevealed ? (
             <ReviewControls onReview={submitReview} isDisabled={isSubmitting} />
           ) : (
-            <Button size="lg" onClick={revealAnswer} disabled={isSubmitting}>
+            <Button size="lg" onClick={revealAnswer} disabled={isSubmitting} data-testid="study-reveal-button">
               Pokaż odpowiedź
             </Button>
           )}
-          {isSubmitting ? <p className="text-sm text-muted-foreground">Zapisywanie oceny...</p> : null}
+          {isSubmitting ? (
+            <p className="text-sm text-muted-foreground" data-testid="study-saving-indicator">
+              Zapisywanie oceny...
+            </p>
+          ) : null}
         </div>
 
-        <div className="rounded-2xl border border-dashed border-muted-foreground/30 bg-muted/20 px-4 py-3 text-sm text-muted-foreground">
+        <div
+          className="rounded-2xl border border-dashed border-muted-foreground/30 bg-muted/20 px-4 py-3 text-sm text-muted-foreground"
+          data-testid="study-next-review"
+        >
           <p className="font-semibold text-foreground">Planowana powtórka: {nextReviewLabel}</p>
           <p className="text-xs text-muted-foreground/90">
             Oceń rzetelnie – SM-2 dopasuje harmonogram do Twojej pamięci.

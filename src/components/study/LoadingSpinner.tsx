@@ -1,10 +1,12 @@
 interface LoadingSpinnerProps {
   message?: string;
+  testId?: string;
 }
 
-export function LoadingSpinner({ message = "Ładowanie danych..." }: LoadingSpinnerProps) {
+export function LoadingSpinner({ message = "Ładowanie danych...", testId }: LoadingSpinnerProps) {
   return (
     <div
+      data-testid={testId}
       className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-muted-foreground/40 px-6 py-16 text-center"
       role="status"
       aria-live="polite"

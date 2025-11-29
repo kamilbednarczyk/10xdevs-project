@@ -34,7 +34,7 @@ const reviewOptions: {
 
 export function ReviewControls({ onReview, isDisabled }: ReviewControlsProps) {
   return (
-    <div className="grid w-full gap-4 md:grid-cols-3">
+    <div className="grid w-full gap-4 md:grid-cols-3" data-testid="study-review-options">
       {reviewOptions.map((option) => (
         <Button
           key={option.quality}
@@ -43,6 +43,7 @@ export function ReviewControls({ onReview, isDisabled }: ReviewControlsProps) {
           size="lg"
           disabled={isDisabled}
           className="h-auto flex-col gap-1 py-4 text-base font-semibold"
+          data-testid={`study-review-option-${option.quality}`}
           onClick={() => onReview(option.quality)}
         >
           {option.label}
