@@ -112,10 +112,19 @@ export function FlashcardsView() {
           </p>
         </div>
         <div className="flex flex-wrap justify-end gap-3">
-          <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => refresh()}>
+          <Button
+            variant="outline"
+            className="flex-1 sm:flex-none"
+            onClick={() => refresh()}
+            data-testid="flashcards-refresh-button"
+          >
             Odśwież listę
           </Button>
-          <Button className="flex-1 sm:flex-none" onClick={() => setCreateDialogOpen(true)}>
+          <Button
+            className="flex-1 sm:flex-none"
+            onClick={() => setCreateDialogOpen(true)}
+            data-testid="flashcards-add-button"
+          >
             Dodaj nową fiszkę
           </Button>
         </div>

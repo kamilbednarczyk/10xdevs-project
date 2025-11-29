@@ -26,7 +26,7 @@ export function FlashcardActions({ flashcard, onDelete, onUpdate, isDeleting, is
 
   return (
     <>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1" data-testid="flashcard-actions">
         <Button
           type="button"
           variant="ghost"
@@ -35,6 +35,7 @@ export function FlashcardActions({ flashcard, onDelete, onUpdate, isDeleting, is
           className="text-muted-foreground hover:text-primary"
           onClick={() => setEditOpen(true)}
           disabled={isUpdating || isDeleting}
+          data-testid="flashcard-edit-button"
         >
           <Pencil className="size-4" />
         </Button>
@@ -46,6 +47,7 @@ export function FlashcardActions({ flashcard, onDelete, onUpdate, isDeleting, is
           className="text-muted-foreground hover:text-destructive"
           onClick={() => setConfirmOpen(true)}
           disabled={isDeleting || isUpdating}
+          data-testid="flashcard-delete-button"
         >
           <Trash2 className="size-4" />
         </Button>

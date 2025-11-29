@@ -24,12 +24,13 @@ export function DeleteFlashcardDialog({
       role="alertdialog"
       aria-modal="true"
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8"
+      data-testid="delete-flashcard-dialog"
     >
       <div className="w-full max-w-md rounded-2xl border border-border/70 bg-card p-6 shadow-2xl">
         <header className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-destructive/80">Potwierdzenie</p>
           <h3 className="text-xl font-semibold text-foreground">Usunąć fiszkę?</h3>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-muted-foreground" data-testid="delete-flashcard-message">
             {flashcardFront ? (
               <>
                 Fiszka <span className="font-semibold">&ldquo;{flashcardFront}&rdquo;</span> zostanie trwale usunięta.
@@ -47,10 +48,17 @@ export function DeleteFlashcardDialog({
             className="w-full sm:w-auto"
             onClick={() => onOpenChange(false)}
             disabled={isDeleting}
+            data-testid="delete-flashcard-cancel-button"
           >
             Anuluj
           </Button>
-          <Button variant="destructive" className="w-full sm:w-auto" onClick={onConfirm} disabled={isDeleting}>
+          <Button
+            variant="destructive"
+            className="w-full sm:w-auto"
+            onClick={onConfirm}
+            disabled={isDeleting}
+            data-testid="delete-flashcard-confirm-button"
+          >
             {isDeleting ? "Usuwanie..." : "Usuń"}
           </Button>
         </div>

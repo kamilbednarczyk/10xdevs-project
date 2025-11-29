@@ -27,7 +27,7 @@ export function FlashcardsTable({
   onPageChange,
 }: FlashcardsTableProps) {
   return (
-    <Card className="border-border/60 bg-card p-6 shadow-sm">
+    <Card className="border-border/60 bg-card p-6 shadow-sm" data-testid="flashcards-table">
       <DataTableToolbar total={pagination?.total ?? data.length} isLoading={isLoading} />
       <DataTableContent
         data={data}

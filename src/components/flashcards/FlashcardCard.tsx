@@ -28,13 +28,15 @@ const formatDate = (value?: string | null) => {
 
 export function FlashcardCard({ flashcard, onDelete, onUpdate, isDeleting, isUpdating }: FlashcardCardProps) {
   return (
-    <Card className="border-border/60">
+    <Card className="border-border/60" data-testid="flashcard-card" data-flashcard-id={flashcard.id}>
       <CardHeader className="flex flex-row items-start justify-between gap-4 pb-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary/70">
             {flashcard.generation_type === "manual" ? "Ręczna" : "AI"}
           </p>
-          <CardTitle className="mt-1 text-lg">{flashcard.front}</CardTitle>
+          <CardTitle className="mt-1 text-lg" data-testid="flashcard-card-front">
+            {flashcard.front}
+          </CardTitle>
         </div>
         <FlashcardActions
           flashcard={flashcard}
@@ -47,7 +49,9 @@ export function FlashcardCard({ flashcard, onDelete, onUpdate, isDeleting, isUpd
       <CardContent className="space-y-4">
         <section>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Tył</p>
-          <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-foreground">{flashcard.back}</p>
+          <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-foreground" data-testid="flashcard-card-back">
+            {flashcard.back}
+          </p>
         </section>
         <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
           <span>

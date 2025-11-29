@@ -37,7 +37,7 @@ export function FlashcardsList({
   const shouldShowSkeletons = isLoading && data.length === 0;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5" data-testid="flashcards-list">
       {shouldShowSkeletons
         ? Array.from({ length: 3 }).map((_, index) => <SkeletonCard key={`skeleton-${index}`} />)
         : data.map((flashcard) => (

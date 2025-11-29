@@ -120,7 +120,10 @@ export function FlashcardFormDialog({
   const copy = dialogCopy[mode];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 px-4 py-8 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 px-4 py-8 backdrop-blur-sm"
+      data-testid="flashcard-form-dialog"
+    >
       <div className="relative w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-2xl">
         <header className="mb-6 space-y-1">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/70">{copy.eyebrow}</p>
@@ -128,7 +131,7 @@ export function FlashcardFormDialog({
           <p className="text-sm text-muted-foreground">{copy.description}</p>
         </header>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-5" onSubmit={handleSubmit} data-testid="flashcard-form">
           <div className="space-y-2">
             <label htmlFor="flashcard-front" className="text-sm font-medium text-foreground">
               Przód
@@ -141,9 +144,12 @@ export function FlashcardFormDialog({
               onChange={(event) => setFront(event.target.value)}
               aria-invalid={Boolean(frontError)}
               autoFocus
+              data-testid="flashcard-front-input"
             />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span className="text-destructive">{frontError}</span>
+              <span className="text-destructive" data-testid="flashcard-front-error">
+                {frontError}
+              </span>
               <span>Pozostało {charactersLeft.front}</span>
             </div>
           </div>
@@ -160,14 +166,21 @@ export function FlashcardFormDialog({
               rows={5}
               onChange={(event) => setBack(event.target.value)}
               aria-invalid={Boolean(backError)}
+              data-testid="flashcard-back-input"
             />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
-              <span className="text-destructive">{backError}</span>
+              <span className="text-destructive" data-testid="flashcard-back-error">
+                {backError}
+              </span>
               <span>Pozostało {charactersLeft.back}</span>
             </div>
           </div>
 
-          {global ? <p className="text-sm text-destructive">{global}</p> : null}
+          {global ? (
+            <p className="text-sm text-destructive" data-testid="flashcard-form-global-error">
+              {global}
+            </p>
+          ) : null}
 
           <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:justify-end">
             <Button
@@ -176,10 +189,16 @@ export function FlashcardFormDialog({
               className="w-full sm:w-auto"
               onClick={() => onOpenChange(false)}
               disabled={isSubmitting}
+              data-testid="flashcard-form-cancel-button"
             >
               Anuluj
             </Button>
-            <Button type="submit" className="w-full sm:w-auto" disabled={isSubmitting}>
+            <Button
+              type="submit"
+              className="w-full sm:w-auto"
+              disabled={isSubmitting}
+              data-testid="flashcard-form-submit-button"
+            >
               {isSubmitting ? "Zapisywanie..." : copy.submit}
             </Button>
           </div>
