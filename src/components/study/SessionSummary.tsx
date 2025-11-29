@@ -20,18 +20,14 @@ export function SessionSummary({
         <CardTitle className="text-3xl font-bold">
           {isEmptySession ? "Brak fiszek do powtórki na dziś!" : "Świetna robota, sesja zakończona!"}
         </CardTitle>
-        <CardDescription className="text-base">
-          {isEmptySession
-            ? "Możesz wrócić później, gdy pojawią się nowe fiszki wymagające nauki."
-            : `Oceniłeś ${totalFlashcards} ${formatFlashcardLabel(totalFlashcards)}. Kolejna sesja już wkrótce.`}
-        </CardDescription>
+        {!isEmptySession && (
+          <CardDescription className="text-base">
+            {`Liczba ocenionych fiszek: ${totalFlashcards}. Kolejna sesja już wkrótce.`}
+          </CardDescription>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
-        {!isEmptySession ? (
-          <div className="inline-flex items-baseline gap-1 rounded-full border border-primary/30 px-4 py-2 text-sm font-semibold text-primary">
-            {totalFlashcards} {formatFlashcardLabel(totalFlashcards)}
-          </div>
-        ) : (
+        {isEmptySession && (
           <p className="text-sm text-muted-foreground">
             Gdy tylko pojawią się nowe powtórki, powiadomimy Cię w panelu głównym.
           </p>
@@ -46,14 +42,4 @@ export function SessionSummary({
       )}
     </Card>
   );
-}
-
-function formatFlashcardLabel(value: number) {
-  if (value === 1) {
-    return "fiszka";
-  }
-  if (value >= 2 && value <= 4) {
-    return "fiszki";
-  }
-  return "fiszek";
 }
