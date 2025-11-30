@@ -55,8 +55,8 @@ export class NavigationPage {
    * Verify that a specific link is active (current page)
    */
   async expectLinkActive(link: "dashboard" | "flashcards" | "generate") {
-    const locator = link === "dashboard" ? this.dashboardLink : link === "flashcards" ? this.flashcardsLink : this.generateLink;
+    const locator =
+      link === "dashboard" ? this.dashboardLink : link === "flashcards" ? this.flashcardsLink : this.generateLink;
     await expect(locator).toHaveAttribute("aria-current", "page");
   }
 }
-

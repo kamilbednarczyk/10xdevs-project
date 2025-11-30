@@ -1,9 +1,9 @@
-import type { FullConfig } from "@playwright/test";
 import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 import path from "path";
 
 import type { Database } from "../../src/db/database.types.ts";
+import { logger } from "../../src/lib/logger.ts";
 
 dotenv.config({ path: path.resolve(process.cwd(), ".env.test") });
 
@@ -19,11 +19,11 @@ function assertEnvVar(name: RequiredEnvVar) {
   return value;
 }
 
-export default async function globalTeardown(_: FullConfig) {
+export default async function globalTeardown() {
   const missing = REQUIRED_ENV_VARS.filter((name) => !process.env[name]);
 
   if (missing.length > 0) {
-    console.warn(
+    logger.warn(
       `[playwright:teardown] Skipping Supabase cleanup because env variables are missing: ${missing.join(", ")}`
     );
     return;
@@ -54,11 +54,11 @@ export default async function globalTeardown(_: FullConfig) {
     const flashcardsRemoved = await deleteForUser("flashcards");
     const generationsRemoved = await deleteForUser("generations");
 
-    console.info(
+    logger.info(
       `[playwright:teardown] Cleaned up Supabase data for user ${userId} (flashcards: ${flashcardsRemoved}, generations: ${generationsRemoved})`
     );
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     throw error;
   }
 }

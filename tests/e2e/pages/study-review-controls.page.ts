@@ -39,4 +39,3 @@ export class StudyReviewControlsPage {
     await option.click();
   }
 }
-

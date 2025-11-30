@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,20 +9,21 @@ const BACK_LIMIT = 500;
 
 type FlashcardDialogMode = "create" | "edit";
 
-const dialogCopy: Record<FlashcardDialogMode, { eyebrow: string; title: string; description: string; submit: string }> = {
-  create: {
-    eyebrow: "Ręczne tworzenie",
-    title: "Nowa fiszka",
-    description: "Uzupełnij przód i tył, aby dodać fiszkę do swojej kolekcji.",
-    submit: "Zapisz fiszkę",
-  },
-  edit: {
-    eyebrow: "Edycja fiszki",
-    title: "Zaktualizuj treść",
-    description: "Wprowadź poprawki i zapisz zmiany.",
-    submit: "Zapisz zmiany",
-  },
-};
+const dialogCopy: Record<FlashcardDialogMode, { eyebrow: string; title: string; description: string; submit: string }> =
+  {
+    create: {
+      eyebrow: "Ręczne tworzenie",
+      title: "Nowa fiszka",
+      description: "Uzupełnij przód i tył, aby dodać fiszkę do swojej kolekcji.",
+      submit: "Zapisz fiszkę",
+    },
+    edit: {
+      eyebrow: "Edycja fiszki",
+      title: "Zaktualizuj treść",
+      description: "Wprowadź poprawki i zapisz zmiany.",
+      submit: "Zapisz zmiany",
+    },
+  };
 
 interface FieldErrors {
   front?: string;
@@ -53,6 +54,7 @@ export function FlashcardFormDialog({
   const [front, setFront] = useState(initialValues?.front ?? "");
   const [back, setBack] = useState(initialValues?.back ?? "");
   const [{ front: frontError, back: backError, global }, setErrors] = useState<FieldErrors>({});
+  const frontInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
@@ -62,6 +64,7 @@ export function FlashcardFormDialog({
     setFront(initialValues?.front ?? "");
     setBack(initialValues?.back ?? "");
     setErrors({});
+    frontInputRef.current?.focus();
   }, [initialValues?.back, initialValues?.front, isOpen]);
 
   const charactersLeft = useMemo(
@@ -143,7 +146,7 @@ export function FlashcardFormDialog({
               placeholder="Wpisz pytanie lub pojęcie..."
               onChange={(event) => setFront(event.target.value)}
               aria-invalid={Boolean(frontError)}
-              autoFocus
+              ref={frontInputRef}
               data-testid="flashcard-front-input"
             />
             <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -207,5 +210,3 @@ export function FlashcardFormDialog({
     </div>
   );
 }
-
-

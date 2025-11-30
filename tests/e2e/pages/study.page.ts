@@ -140,4 +140,3 @@ export class StudyPage {
     await this.summary.expectVisible();
   }
 }
-

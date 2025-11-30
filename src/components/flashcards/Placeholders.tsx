@@ -31,5 +31,3 @@ export function FlashcardsEmptyState({ onCreate }: FlashcardsEmptyStateProps) {
     </Card>
   );
 }
-
-

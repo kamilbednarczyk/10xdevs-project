@@ -16,6 +16,3 @@ export function DataTableToolbar({ total, isLoading }: DataTableToolbarProps) {
     </div>
   );
 }
-
-
-

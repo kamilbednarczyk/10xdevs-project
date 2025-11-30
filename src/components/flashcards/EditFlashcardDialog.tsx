@@ -10,7 +10,13 @@ export interface EditFlashcardDialogProps {
   isSubmitting?: boolean;
 }
 
-export function EditFlashcardDialog({ isOpen, onOpenChange, flashcard, onUpdate, isSubmitting }: EditFlashcardDialogProps) {
+export function EditFlashcardDialog({
+  isOpen,
+  onOpenChange,
+  flashcard,
+  onUpdate,
+  isSubmitting,
+}: EditFlashcardDialogProps) {
   return (
     <FlashcardFormDialog
       mode="edit"
@@ -31,5 +37,3 @@ export function EditFlashcardDialog({ isOpen, onOpenChange, flashcard, onUpdate,
     />
   );
 }
-
-

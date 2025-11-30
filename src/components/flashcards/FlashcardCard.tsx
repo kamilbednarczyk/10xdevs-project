@@ -49,7 +49,10 @@ export function FlashcardCard({ flashcard, onDelete, onUpdate, isDeleting, isUpd
       <CardContent className="space-y-4">
         <section>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Tył</p>
-          <p className="mt-1 whitespace-pre-line text-sm leading-relaxed text-foreground" data-testid="flashcard-card-back">
+          <p
+            className="mt-1 whitespace-pre-line text-sm leading-relaxed text-foreground"
+            data-testid="flashcard-card-back"
+          >
             {flashcard.back}
           </p>
         </section>

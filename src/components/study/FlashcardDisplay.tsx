@@ -27,7 +27,10 @@ export function FlashcardDisplay({ flashcard, isRevealed }: FlashcardDisplayProp
         >
           {isRevealed ? (
             <>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/70" data-testid="study-flashcard-back-label">
+              <p
+                className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/70"
+                data-testid="study-flashcard-back-label"
+              >
                 Rewers
               </p>
               <p className="mt-3 text-lg font-medium text-foreground" data-testid="study-flashcard-back-value">

@@ -36,7 +36,14 @@ const LoadingRow = () => (
   </tr>
 );
 
-export function DataTableContent({ data, isLoading, deletingIds, updatingIds, onDelete, onUpdate }: DataTableContentProps) {
+export function DataTableContent({
+  data,
+  isLoading,
+  deletingIds,
+  updatingIds,
+  onDelete,
+  onUpdate,
+}: DataTableContentProps) {
   const shouldShowSkeletons = isLoading && data.length === 0;
 
   return (
@@ -96,6 +103,3 @@ export function DataTableContent({ data, isLoading, deletingIds, updatingIds, on
     </div>
   );
 }
-
-
-

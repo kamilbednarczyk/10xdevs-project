@@ -241,11 +241,11 @@ export function useFlashcards(options?: UseFlashcardsOptions): UseFlashcardsResu
         await refresh();
       } finally {
         setState((prev) => {
-          const updatedDeleting = { ...prev.deletingIds };
-          delete updatedDeleting[id];
+          const { [id]: removedEntry, ...restDeleting } = prev.deletingIds;
+          void removedEntry;
           return {
             ...prev,
-            deletingIds: updatedDeleting,
+            deletingIds: restDeleting,
           };
         });
       }
@@ -299,11 +299,11 @@ export function useFlashcards(options?: UseFlashcardsOptions): UseFlashcardsResu
         return null;
       } finally {
         setState((prev) => {
-          const nextUpdating = { ...prev.updatingIds };
-          delete nextUpdating[id];
+          const { [id]: removedEntry, ...restUpdating } = prev.updatingIds;
+          void removedEntry;
           return {
             ...prev,
-            updatingIds: nextUpdating,
+            updatingIds: restUpdating,
           };
         });
       }

@@ -55,6 +55,3 @@ export function DataTablePagination({ pagination, isLoading, onPageChange, class
     </div>
   );
 }
-
-
-

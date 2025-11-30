@@ -56,4 +56,3 @@ export class ActionsFooterPage {
     await expect(this.saveButton).toHaveText("Zapisz zaznaczone");
   }
 }
-

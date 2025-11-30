@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { ChatCompletionOptions, ChatCompletionResponse, FlashcardProposalDTO } from "../../types";
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
@@ -67,7 +68,7 @@ export class OpenRouterService {
   constructor(config: OpenRouterServiceConfig = {}) {
     const resolvedKey = config.apiKey ?? import.meta.env.OPENROUTER_API_KEY;
     if (!resolvedKey) {
-      console.error("[OpenRouterService] Missing OPENROUTER_API_KEY environment variable.");
+      logger.error("[OpenRouterService] Missing OPENROUTER_API_KEY environment variable.");
       throw new Error("OpenRouterService is not configured. Provide OPENROUTER_API_KEY.");
     }
 
@@ -92,7 +93,7 @@ export class OpenRouterService {
       const response = await this.makeRequest(payload);
       return response as ChatCompletionResponse;
     } catch (error) {
-      console.error("[OpenRouterService] getChatCompletion failed:", error);
+      logger.error("[OpenRouterService] getChatCompletion failed:", error);
       if (error instanceof OpenRouterApiError) {
         throw error;
       }
@@ -163,7 +164,7 @@ export class OpenRouterService {
             parsedBody ?? rawBody
           );
 
-          console.error(
+          logger.error(
             `[OpenRouterService] API error (status: ${response.status}) on attempt ${attempt + 1}`,
             parsedBody ?? rawBody
           );
@@ -188,7 +189,7 @@ export class OpenRouterService {
         }
 
         if (!(error instanceof OpenRouterApiError)) {
-          console.error(`[OpenRouterService] Network error on attempt ${attempt + 1} of ${this.maxRetries + 1}`, error);
+          logger.error(`[OpenRouterService] Network error on attempt ${attempt + 1} of ${this.maxRetries + 1}`, error);
           if (attempt < this.maxRetries) {
             await this.delay(this.getRetryDelay(attempt));
             continue;

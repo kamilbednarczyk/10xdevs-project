@@ -65,4 +65,3 @@ export class StudyFlashcardDisplayPage {
     return (await this.backValue.first().textContent())?.trim() ?? "";
   }
 }
-

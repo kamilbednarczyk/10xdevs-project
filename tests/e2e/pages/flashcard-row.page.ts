@@ -68,4 +68,3 @@ export class FlashcardRowPage {
     await this.deleteButton.click();
   }
 }
-

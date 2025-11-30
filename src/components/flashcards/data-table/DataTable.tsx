@@ -41,6 +41,3 @@ export function FlashcardsTable({
     </Card>
   );
 }
-
-
-

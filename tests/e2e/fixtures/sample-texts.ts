@@ -223,4 +223,3 @@ W wyniku fotosyntezy powstaje glukoza i tlen. Proces ten zachodzi w dwóch głó
 
   return result.slice(0, Math.min(targetLength, 10000));
 }
-

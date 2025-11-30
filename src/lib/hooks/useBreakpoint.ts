@@ -50,5 +50,3 @@ export function useBreakpoint(breakpoint: BreakpointKey = "lg"): boolean {
 
   return matches;
 }
-
-

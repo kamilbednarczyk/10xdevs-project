@@ -1,3 +1,4 @@
+import { logger } from "@/lib/logger";
 import type { SupabaseClient } from "../../db/supabase.client";
 import type {
   CreateFlashcardCommand,
@@ -224,7 +225,7 @@ export class FlashcardService {
 
         if (fetchError) {
           // Log error but don't fail the entire operation since flashcards were already created
-          console.error(`Failed to fetch generation ${generationId} for update:`, fetchError);
+          logger.error(`Failed to fetch generation ${generationId} for update:`, fetchError);
           continue;
         }
 
@@ -240,7 +241,7 @@ export class FlashcardService {
 
         if (updateError) {
           // Log error but don't fail the entire operation since flashcards were already created
-          console.error(`Failed to update accepted_count for generation ${generationId}:`, updateError);
+          logger.error(`Failed to update accepted_count for generation ${generationId}:`, updateError);
         }
       }
     }

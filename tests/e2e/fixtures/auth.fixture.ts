@@ -33,12 +33,12 @@ export async function loginAsTestUser(page: Page) {
  *   test('my test', async ({ authenticatedPage }) => { ... });
  */
 export const test = base.extend<AuthFixtures>({
-  authenticatedPage: async ({ page }, use) => {
+  authenticatedPage: async ({ page }, run) => {
     // Perform login before each test
     await loginAsTestUser(page);
 
     // Provide the authenticated page to the test
-    await use(page);
+    await run(page);
 
     // Cleanup (if needed) happens here after the test
   },
