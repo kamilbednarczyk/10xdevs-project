@@ -1,7 +1,16 @@
 import { defineConfig, devices } from "@playwright/test";
+import { existsSync } from "node:fs";
 import dotenv from "dotenv";
 import path from "path";
-dotenv.config({ path: path.resolve(process.cwd(), ".env.test") });
+
+const testEnvPath = path.resolve(process.cwd(), ".env.test");
+const shouldLoadTestEnv = !process.env.CI && existsSync(testEnvPath);
+
+if (shouldLoadTestEnv) {
+  dotenv.config({ path: testEnvPath });
+} else {
+  dotenv.config();
+}
 
 const devServerPort = Number(process.env.PLAYWRIGHT_PORT ?? 4321);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${devServerPort}`;
