@@ -9,7 +9,7 @@ const shouldLoadTestEnv = !process.env.CI && existsSync(testEnvPath);
 if (shouldLoadTestEnv) {
   dotenv.config({ path: testEnvPath });
 } else {
-  dotenv.config();
+  // dotenv.config();
 }
 
 const devServerPort = Number(process.env.PLAYWRIGHT_PORT ?? 4321);

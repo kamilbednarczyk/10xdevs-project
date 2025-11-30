@@ -12,7 +12,7 @@ const shouldLoadTestEnv = !process.env.CI && existsSync(testEnvPath);
 if (shouldLoadTestEnv) {
   dotenv.config({ path: testEnvPath });
 } else {
-  dotenv.config();
+  // dotenv.config();
 }
 
 const REQUIRED_ENV_VARS = ["SUPABASE_URL", "SUPABASE_KEY", "E2E_USERNAME_ID"] as const;
