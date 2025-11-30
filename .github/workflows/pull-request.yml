@@ -1,0 +1,149 @@
+name: Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        uses: ./.github/actions/npm-ci
+
+      - name: Run lint
+        run: npm run lint
+
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    needs: lint
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        uses: ./.github/actions/npm-ci
+
+      - name: Run unit tests with coverage
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run test:unit:coverage | tee unit-coverage.txt
+
+      - name: Upload unit coverage
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: unit-coverage
+          path: |
+            coverage/unit
+            unit-coverage.txt
+          retention-days: 7
+
+  e2e:
+    name: E2E tests
+    runs-on: ubuntu-latest
+    needs: lint
+    environment:
+      name: integration
+    permissions:
+      contents: read
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      E2E_USERNAME_ID: ${{ secrets.E2E_USERNAME_ID }}
+      E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        uses: ./.github/actions/npm-ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run e2e tests with coverage
+        shell: bash
+        run: |
+          set -o pipefail
+          npx --yes nyc --reporter=lcov --reporter=json-summary --report-dir=coverage/e2e npm run test:e2e | tee e2e-coverage.txt
+
+      - name: Upload e2e coverage
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: e2e-coverage
+          path: |
+            coverage/e2e
+            e2e-coverage.txt
+          retention-days: 7
+
+  status-comment:
+    name: Status comment
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - unit
+      - e2e
+    if: ${{ success() }}
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Post consolidated status comment
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const marker = '<!-- pr-status-comment -->';
+            const lintStatus = '${{ needs.lint.result }}';
+            const unitStatus = '${{ needs.unit.result }}';
+            const e2eStatus = '${{ needs.e2e.result }}';
+            const summary = `${marker}
+            ### ✅ Pull request checks passed
+
+            - Lint: **${lintStatus.toUpperCase()}**
+            - Unit tests: **${unitStatus.toUpperCase()}**
+            - E2E tests: **${e2eStatus.toUpperCase()}**
+
+            Coverage artifacts: \`unit-coverage\`, \`e2e-coverage\`.
+            `;
+
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const { data: comments } = await github.rest.issues.listComments({ owner, repo, issue_number, per_page: 100 });
+            const existing = comments.find((comment) => comment.body?.includes(marker));
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body: summary,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body: summary,
+              });
+            }
+
