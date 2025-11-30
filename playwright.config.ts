@@ -1,28 +1,20 @@
 import { defineConfig, devices } from "@playwright/test";
-import { existsSync } from "node:fs";
+// import { existsSync } from "node:fs";
 import dotenv from "dotenv";
 import path from "path";
 
 const testEnvPath = path.resolve(process.cwd(), ".env.test");
-const shouldLoadTestEnv = !process.env.CI && existsSync(testEnvPath);
+// const shouldLoadTestEnv = !process.env.CI && existsSync(testEnvPath);
+dotenv.config({ path: testEnvPath });
 
-if (shouldLoadTestEnv) {
-  dotenv.config({ path: testEnvPath });
-} else {
-  dotenv.config();
-}
+// if (shouldLoadTestEnv) {
+//   dotenv.config({ path: testEnvPath });
+// } else {
+//   dotenv.config();
+// }
 
 const devServerPort = Number(process.env.PLAYWRIGHT_PORT ?? 4321);
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${devServerPort}`;
-const webServerEnv = Object.entries(process.env).reduce<Record<string, string>>((acc, [key, value]) => {
-  if (typeof value === "string") {
-    acc[key] = value;
-  }
-
-  return acc;
-}, {});
-
-webServerEnv.NODE_ENV = "development";
 
 export default defineConfig({
   testDir: "./tests/e2e",
@@ -56,7 +48,6 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
     stdout: "pipe",
     stderr: "pipe",
-    env: webServerEnv,
   },
   snapshotPathTemplate: "{testDir}/__screenshots__/{projectName}/{testFilePath}/{arg}{ext}",
 });
