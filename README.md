@@ -33,7 +33,7 @@ The project is built with a modern, scalable, and efficient technology stack:
   - [MSW](https://mswjs.io/) for API mocking in tests.
 - **CI/CD & Hosting:**
   - [GitHub Actions](https://github.com/features/actions) for CI/CD pipelines.
-  - [DigitalOcean](https://www.digitalocean.com/) for hosting via Docker images.
+  - [Cloudflare Pages](https://pages.cloudflare.com/) for global edge hosting.
 
 ## Getting Started Locally
 

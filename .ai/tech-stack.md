@@ -25,4 +25,4 @@ Testowanie - Kompleksowa strategia zapewnienia jakości:
 
 CI/CD i Hosting:
 - Github Actions do tworzenia pipeline'ów CI/CD (testy, lint, build, deploy)
-- DigitalOcean do hostowania aplikacji za pośrednictwem obrazu docker
+- Cloudflare Pages do hostowania aplikacji (wykorzystanie edge computing dla niskich opóźnień)
