@@ -51,4 +51,3 @@ export class StudySessionSummaryPage {
     await this.secondaryAction.click();
   }
 }
-
