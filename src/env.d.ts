@@ -1,10 +1,13 @@
 /// <reference types="astro/client" />
 
+import type { Runtime } from "@astrojs/cloudflare";
+
 import type { SupabaseClient } from "./db/supabase.client.ts";
+import type { RuntimeEnvBindings } from "@/lib/runtime-env";
 
 declare global {
   namespace App {
-    interface Locals {
+    interface Locals extends Runtime<RuntimeEnvBindings> {
       supabase: SupabaseClient;
       user?: {
         id: string;

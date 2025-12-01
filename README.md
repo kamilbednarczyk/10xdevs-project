@@ -57,6 +57,38 @@ npm run dev
 ```
 The application will be available at `http://localhost:4321`.
 
+## Cloudflare Deployment
+
+This project ships with the `@astrojs/cloudflare` adapter and a `wrangler.jsonc` worker entry, so the output in `dist/_worker.js` can be deployed to Cloudflare Pages (Functions) or Workers without extra configuration.
+
+1. **Prepare environment variables**
+   - Copy `.dev.vars.example` to `.dev.vars` for local Cloudflare previews and fill in the values.
+   - For production, add the same keys under **Settings → Environment variables** in the Cloudflare dashboard or run `npx wrangler secret put <KEY>`.
+2. **Build the worker bundle**
+   ```bash
+   npm run build
+   ```
+3. **Local Cloudflare preview**
+   ```bash
+   npx wrangler dev
+   ```
+   Wrangler loads `.dev.vars` automatically and serves the worker on `http://localhost:8787`.
+4. **Deploy**
+   ```bash
+   npx wrangler pages deploy dist
+   ```
+
+### Required environment variables
+
+| Variable | Description |
+| --- | --- |
+| `SUPABASE_URL` | Supabase project URL (used for auth and data). |
+| `SUPABASE_KEY` | Supabase anon/public key for authenticated requests. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key, required only for privileged admin calls. |
+| `OPENROUTER_API_KEY` | Secret key for the OpenRouter AI gateway. |
+
+> Runtime code now reads these values from `locals.runtime.env`, so they remain accessible when the worker executes on Cloudflare’s edge.
+
 ## Available Scripts
 
 The following scripts are available in the `package.json`:

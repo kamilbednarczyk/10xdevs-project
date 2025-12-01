@@ -85,7 +85,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
     }
 
     // Step 3: Call GenerationService to retrieve generations
-    const generationService = new GenerationService(locals.supabase);
+    const generationService = new GenerationService(locals.supabase, undefined, locals.runtime?.env);
 
     let response: GenerationListResponseDTO;
     try {
@@ -249,7 +249,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
 
     // Step 4: Call GenerationService
-    const generationService = new GenerationService(locals.supabase);
+    const generationService = new GenerationService(locals.supabase, undefined, locals.runtime?.env);
 
     let result: GenerationResponseDTO;
     try {

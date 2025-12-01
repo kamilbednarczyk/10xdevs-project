@@ -6,6 +6,7 @@ import type {
   GenerationListItemDTO,
   PaginationDTO,
 } from "../../types";
+import type { RuntimeEnvSource } from "@/lib/runtime-env";
 import { OpenRouterApiError, OpenRouterService } from "./openrouter.service";
 
 /**
@@ -37,10 +38,10 @@ export class GenerationService {
   private readonly aiService: FlashcardGenerationService;
   private readonly supabase: SupabaseClient;
 
-  constructor(supabase: SupabaseClient, aiService?: FlashcardGenerationService) {
+  constructor(supabase: SupabaseClient, aiService?: FlashcardGenerationService, runtimeEnv?: RuntimeEnvSource) {
     this.supabase = supabase;
     // Allow dependency injection for easier testing/fallbacks.
-    this.aiService = aiService ?? new OpenRouterService();
+    this.aiService = aiService ?? new OpenRouterService({ runtimeEnv });
   }
 
   /**

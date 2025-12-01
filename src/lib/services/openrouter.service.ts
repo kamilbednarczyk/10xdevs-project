@@ -1,4 +1,6 @@
 import { logger } from "@/lib/logger";
+import type { RuntimeEnvSource } from "@/lib/runtime-env";
+import { resolveRuntimeEnv } from "@/lib/runtime-env";
 import type { ChatCompletionOptions, ChatCompletionResponse, FlashcardProposalDTO } from "../../types";
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
@@ -43,6 +45,7 @@ export interface OpenRouterServiceConfig {
   maxRetries?: number;
   initialRetryDelayMs?: number;
   fetchFn?: typeof fetch;
+  runtimeEnv?: RuntimeEnvSource;
 }
 
 export class OpenRouterApiError extends Error {
@@ -66,7 +69,8 @@ export class OpenRouterService {
   private readonly fetchImpl: typeof fetch;
 
   constructor(config: OpenRouterServiceConfig = {}) {
-    const resolvedKey = config.apiKey ?? import.meta.env.OPENROUTER_API_KEY;
+    const env = resolveRuntimeEnv(config.runtimeEnv);
+    const resolvedKey = config.apiKey ?? env.OPENROUTER_API_KEY;
     if (!resolvedKey) {
       logger.error("[OpenRouterService] Missing OPENROUTER_API_KEY environment variable.");
       throw new Error("OpenRouterService is not configured. Provide OPENROUTER_API_KEY.");
@@ -82,7 +86,9 @@ export class OpenRouterService {
     this.title = config.title ?? DEFAULT_TITLE;
     this.maxRetries = Math.max(0, config.maxRetries ?? MAX_RETRIES);
     this.initialRetryDelayMs = Math.max(100, config.initialRetryDelayMs ?? INITIAL_RETRY_DELAY_MS);
-    this.fetchImpl = fetchFn;
+    // Cloudflare workers and other runtimes expect fetch to be bound to their global context.
+    // Bind automatically unless a custom fetch implementation was provided.
+    this.fetchImpl = (config.fetchFn ? fetchFn : fetchFn.bind(globalThis)) as typeof fetch;
   }
 
   public async getChatCompletion(options: ChatCompletionOptions): Promise<ChatCompletionResponse> {
@@ -269,5 +275,3 @@ export class OpenRouterService {
     return parsed as FlashcardProposalDTO[];
   }
 }
-
-export const openRouterService = new OpenRouterService();

@@ -23,6 +23,7 @@ test-results/
 .env
 .env.production
 .env.test
+.dev.vars
 
 # macOS-specific files
 .DS_Store

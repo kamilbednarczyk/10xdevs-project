@@ -11,7 +11,7 @@ const jsonResponse = (body: Record<string, unknown>, status: number) =>
     headers: { "Content-Type": "application/json" },
   });
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, cookies, locals }) => {
   let payload: unknown;
 
   try {
@@ -38,7 +38,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     );
   }
 
-  const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
+  const supabase = createSupabaseServerInstance({
+    cookies,
+    headers: request.headers,
+    runtimeEnv: locals.runtime?.env,
+  });
   const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error) {
