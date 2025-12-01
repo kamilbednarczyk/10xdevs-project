@@ -42,7 +42,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run dev -- --host 127.0.0.1 --port ${devServerPort}`,
+    command: `npx wrangler dev --env test --host 127.0.0.1 --port ${devServerPort}`,
     url: `http://127.0.0.1:${devServerPort}`,
     reuseExistingServer: !process.env.CI,
     stdout: "pipe",

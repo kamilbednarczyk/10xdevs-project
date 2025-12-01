@@ -4,6 +4,9 @@ dist/
 # generated types
 .astro/
 
+# wrangler
+.wrangler/
+
 # dependencies
 node_modules/
 
@@ -24,6 +27,7 @@ test-results/
 .env.production
 .env.test
 .dev.vars
+.dev.vars.test
 
 # macOS-specific files
 .DS_Store
