@@ -63,7 +63,7 @@ export async function GET({ params, locals }: APIContext): Promise<Response> {
     }
 
     // Step 4: Fetch generation from service
-    const generationService = new GenerationService(supabase);
+    const generationService = new GenerationService(supabase, undefined, locals.runtime?.env);
     const generation = await generationService.getGenerationById(generationId);
 
     // Step 5: Handle not found case

@@ -70,12 +70,24 @@ jobs:
       E2E_USERNAME_ID: ${{ secrets.E2E_USERNAME_ID }}
       E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
       E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      WRANGLER_SEND_METRICS: "false"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
       - name: Install dependencies
         uses: ./.github/actions/npm-ci
+
+      - name: Generate wrangler .dev.vars.test
+        run: |
+          cat <<EOF > .dev.vars.test
+          SUPABASE_URL=${SUPABASE_URL}
+          SUPABASE_KEY=${SUPABASE_KEY}
+          OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+          EOF
+
+      - name: Build worker bundle
+        run: npm run build
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
