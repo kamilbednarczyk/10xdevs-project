@@ -85,9 +85,6 @@ jobs:
           SUPABASE_KEY=${SUPABASE_KEY}
           OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
           EOF
-          if [[ -n "${SUPABASE_SERVICE_ROLE_KEY:-}" ]]; then
-            echo "SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}" >> .dev.vars.test
-          fi
 
       - name: Build worker bundle
         run: npm run build
