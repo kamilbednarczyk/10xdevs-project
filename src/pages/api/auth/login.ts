@@ -1,6 +1,5 @@
 import type { APIRoute } from "astro";
 
-import { createSupabaseServerInstance } from "../../../db/supabase.client.ts";
 import { LoginSchema } from "@/lib/schemas/auth.schema";
 
 export const prerender = false;
@@ -11,7 +10,7 @@ const jsonResponse = (body: Record<string, unknown>, status: number) =>
     headers: { "Content-Type": "application/json" },
   });
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   let payload: unknown;
 
   try {
@@ -38,7 +37,16 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     );
   }
 
-  const supabase = createSupabaseServerInstance({ cookies, headers: request.headers });
+  const supabase = locals.supabase;
+  if (!supabase) {
+    return jsonResponse(
+      {
+        error: "SERVER_ERROR",
+        message: "Brak połączenia z serwerem uwierzytelniania. Spróbuj ponownie.",
+      },
+      500
+    );
+  }
   const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error) {
