@@ -1,0 +1,55 @@
+### Variables
+@baseUrl = http://localhost:3000
+@apiBase = {{baseUrl}}/api
+
+### Get Due Flashcards - No date parameter (use current server time)
+GET {{apiBase}}/study/due HTTP/1.1
+
+### Get Due Flashcards - With specific date (past date to get all due flashcards)
+GET {{apiBase}}/study/due?date=2025-12-31T23:59:59Z HTTP/1.1
+
+### Get Due Flashcards - With specific date (current date)
+GET {{apiBase}}/study/due?date=2025-11-17T10:00:00Z HTTP/1.1
+
+### Get Due Flashcards - With specific date (future date - should return empty or fewer results)
+GET {{apiBase}}/study/due?date=2025-01-01T00:00:00Z HTTP/1.1
+
+### Get Due Flashcards - Invalid date format (should return 400)
+GET {{apiBase}}/study/due?date=invalid-date HTTP/1.1
+
+### Get Due Flashcards - Invalid date format - not ISO 8601 (should return 400)
+GET {{apiBase}}/study/due?date=2025-11-17 HTTP/1.1
+
+### Get Due Flashcards - Date without time (should return 400)
+GET {{apiBase}}/study/due?date=2025-11-17T10:00:00 HTTP/1.1
+
+### Get Due Flashcards - Valid ISO 8601 with timezone
+GET {{apiBase}}/study/due?date=2025-11-17T10:00:00+01:00 HTTP/1.1
+
+### Get Due Flashcards - Valid ISO 8601 with milliseconds
+GET {{apiBase}}/study/due?date=2025-11-17T10:00:00.000Z HTTP/1.1
+
+### Expected Response Format (200 OK)
+# [
+#   {
+#     "id": "uuid-string",
+#     "front": "Question text",
+#     "back": "Answer text",
+#     "interval": 2,
+#     "repetition": 1,
+#     "ease_factor": 2.5,
+#     "due_date": "2025-11-17T00:00:00Z"
+#   }
+# ]
+
+### Expected Error Response Format (400/401/500)
+# {
+#   "error": {
+#     "code": "VALIDATION_ERROR",
+#     "message": "Invalid query parameters",
+#     "details": {
+#       "issues": [...]
+#     }
+#   }
+# }
+

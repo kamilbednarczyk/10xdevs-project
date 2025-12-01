@@ -1,0 +1,375 @@
+### Variables
+@baseUrl = http://localhost:3000
+@apiUrl = {{baseUrl}}/api/generations
+
+###############################################################################
+# POST /api/generations - Generate flashcard proposals from text
+###############################################################################
+
+### 1. Generate flashcards - Geography and Culture
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": "France is a country located in Western Europe, officially known as the French Republic. Its capital and largest city is Paris, which is renowned worldwide for its art, fashion, gastronomy, and culture. The Eiffel Tower, one of the most recognizable structures in the world, was built in 1889 for the World's Fair and stands at 330 meters tall. The Louvre Museum, originally a royal palace, is now the world's largest art museum and houses over 380,000 objects, including the famous Mona Lisa painted by Leonardo da Vinci. France has a rich history dating back to ancient times when it was inhabited by Celtic tribes known as Gauls. The country played a crucial role in European history, particularly during the French Revolution of 1789, which led to the establishment of the First French Republic and had profound effects on the development of modern democracy. France is also known for its diverse geography, ranging from the beaches of the French Riviera to the snow-capped Alps mountains. The country is famous for its wine production, with regions like Bordeaux, Burgundy, and Champagne producing some of the world's finest wines. French cuisine is considered one of the finest in the world, with dishes like coq au vin, bouillabaisse, and crème brûlée being internationally celebrated."
+}
+
+### 2. Generate flashcards - Programming and Computer Science
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": "JavaScript is a high-level, interpreted programming language that has become one of the core technologies of the World Wide Web, alongside HTML and CSS. It was created by Brendan Eich in just 10 days in May 1995 while he was working at Netscape Communications Corporation. Initially named Mocha, then LiveScript, it was finally renamed JavaScript as a marketing move to capitalize on the popularity of Java at the time, despite the two languages being fundamentally different. JavaScript is characterized by several key features: dynamic typing, which means variables can hold values of any type without explicit type declarations; prototype-based object-orientation, which differs from classical inheritance models used in languages like Java or C++; and first-class functions, meaning functions can be assigned to variables, passed as arguments, and returned from other functions. The language supports multiple programming paradigms, including event-driven, functional, and imperative programming styles. Modern JavaScript, particularly after the ES6 (ECMAScript 2015) specification, introduced many powerful features such as arrow functions, classes, template literals, destructuring, spread operators, and promises for handling asynchronous operations. JavaScript can run not only in web browsers but also on servers through Node.js, a runtime environment built on Chrome's V8 JavaScript engine. This has enabled JavaScript to become a full-stack programming language, capable of handling both front-end and back-end development. The language continues to evolve with annual updates to the ECMAScript specification, adding new features and improvements."
+}
+
+### 3. Generate flashcards - American History
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": "The American Revolution was a colonial revolt that took place between 1765 and 1783, fundamentally changing the course of world history. The conflict arose from growing tensions between residents of Great Britain's thirteen North American colonies and the colonial government, which represented the British Crown. The American Patriots in the Thirteen Colonies rejected British authority and fought for independence, ultimately establishing the United States of America. The roots of the revolution can be traced to various acts passed by the British Parliament, including the Stamp Act of 1765, which imposed direct taxes on the colonies, and the Townshend Acts of 1767. These measures were met with fierce resistance under the rallying cry of 'no taxation without representation,' as the colonists had no direct representation in the British Parliament. The Boston Tea Party of 1773, where colonists dumped 342 chests of British tea into Boston Harbor, became a pivotal act of defiance. The First Continental Congress convened in 1774 to coordinate colonial resistance. Armed conflict began on April 19, 1775, with the Battles of Lexington and Concord in Massachusetts. The Second Continental Congress met in May 1775 and eventually appointed George Washington as commander-in-chief of the Continental Army. On July 4, 1776, the Congress adopted the Declaration of Independence, primarily authored by Thomas Jefferson, which formally announced the colonies' separation from Britain. The Revolutionary War saw major battles including Bunker Hill, Saratoga, and Yorktown. The Patriots received crucial support from France, which entered the war as an American ally in 1778, providing military support, supplies, and naval power. The war effectively ended with the British surrender at Yorktown in 1781, and the Treaty of Paris was signed in 1783, officially recognizing American independence."
+}
+
+### 4. Generate flashcards - Biology and Natural Sciences
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": "Photosynthesis is one of the most important biological processes on Earth, serving as the primary means by which energy from sunlight is converted into chemical energy that can be used by living organisms. This process is carried out by plants, algae, and certain bacteria, collectively known as photoautotrophs. During photosynthesis, these organisms use sunlight, water (H2O), and carbon dioxide (CO2) from the atmosphere to produce glucose (C6H12O6) and oxygen (O2). The overall chemical equation for photosynthesis can be written as: 6CO2 + 6H2O + light energy → C6H12O6 + 6O2. This process primarily occurs in the chloroplasts of plant cells, which are specialized organelles containing the green pigment chlorophyll. Chlorophyll is crucial because it absorbs light energy, particularly in the blue and red wavelengths of the visible spectrum, while reflecting green light, which is why plants appear green to our eyes. Photosynthesis occurs in two main stages: the light-dependent reactions and the light-independent reactions (also known as the Calvin cycle). The light-dependent reactions take place in the thylakoid membranes of the chloroplasts, where light energy is captured and used to split water molecules, releasing oxygen as a byproduct and generating ATP (adenosine triphosphate) and NADPH, which are energy-carrying molecules. The light-independent reactions occur in the stroma of the chloroplasts, where the ATP and NADPH produced in the first stage are used to convert carbon dioxide into glucose through a series of chemical reactions. Photosynthesis is essential for life on Earth as it produces the oxygen we breathe and forms the base of most food chains by converting solar energy into a form that can be consumed by other organisms."
+}
+
+### 5. Generate flashcards - Artificial Intelligence and Machine Learning
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": "Machine learning is a subset of artificial intelligence that focuses on the development of algorithms and statistical models that enable computers to improve their performance on a specific task through experience, without being explicitly programmed for every scenario. The field has revolutionized numerous industries and applications, from recommendation systems and natural language processing to autonomous vehicles and medical diagnosis. There are three main types of machine learning, each with distinct characteristics and applications. Supervised learning involves training a model on labeled data, where the correct output is known for each input example. The algorithm learns to map inputs to outputs by finding patterns in the training data. Common supervised learning tasks include classification, where the goal is to predict discrete categories (such as spam vs. non-spam emails), and regression, where the goal is to predict continuous values (such as house prices). Popular supervised learning algorithms include linear regression, logistic regression, decision trees, random forests, support vector machines, and neural networks. Unsupervised learning, in contrast, works with unlabeled data to discover hidden patterns and relationships without predefined categories or outputs. This approach is useful for exploratory data analysis and includes techniques like clustering, which groups similar data points together, and dimensionality reduction, which simplifies complex datasets while preserving important information. Common unsupervised learning algorithms include k-means clustering, hierarchical clustering, and principal component analysis (PCA). Reinforcement learning represents a third paradigm where an agent learns to make decisions by performing actions in an environment and receiving rewards or penalties based on the outcomes. The agent's goal is to learn a policy that maximizes cumulative reward over time. This approach has been successfully applied to game playing, robotics, and resource management problems. Deep learning, a subset of machine learning based on artificial neural networks with multiple layers, has achieved remarkable success in recent years, particularly in image recognition, speech recognition, and natural language processing tasks."
+}
+
+### 6. Validation Error - Empty text
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": ""
+}
+
+### 7. Validation Error - Text too short (less than 1000 characters)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": "This text is intentionally too short to pass validation. The API requires at least 1000 characters, but this text contains far fewer characters. This will trigger a validation error response."
+}
+
+### 8. Validation Error - Missing text field
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "content": "This should fail because field is named 'content' not 'text'"
+}
+
+### 9. Validation Error - Empty body
+POST {{apiUrl}}
+Content-Type: application/json
+
+{}
+
+### 10. Validation Error - Invalid JSON
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": "This is invalid JSON because of the trailing comma",
+}
+
+### 11. Validation Error - Wrong data type
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": 12345
+}
+
+### 12. Validation Error - Array instead of string
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": ["This", "should", "be", "a", "string"]
+}
+
+### 13. Validation Error - Null value
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "text": null
+}
+
+###############################################################################
+# GET /api/generations - List all generations with pagination
+###############################################################################
+
+### 1. List generations - Default parameters (page=1, limit=20)
+GET {{apiUrl}}
+
+### 2. List generations - First page with custom limit
+GET {{apiUrl}}?page=1&limit=10
+
+### 3. List generations - Second page
+GET {{apiUrl}}?page=2&limit=10
+
+### 4. List generations - Third page with small limit
+GET {{apiUrl}}?page=3&limit=5
+
+### 5. List generations - Maximum allowed limit (50)
+GET {{apiUrl}}?limit=50
+
+### 6. List generations - Only page parameter
+GET {{apiUrl}}?page=2
+
+### 7. List generations - Only limit parameter
+GET {{apiUrl}}?limit=15
+
+### 8. List generations - Large page number (beyond available data)
+GET {{apiUrl}}?page=100
+
+### 9. Validation Error - Limit exceeds maximum (51)
+GET {{apiUrl}}?limit=51
+
+### 10. Validation Error - Limit exceeds maximum (100)
+GET {{apiUrl}}?limit=100
+
+### 11. Validation Error - Invalid page (zero)
+GET {{apiUrl}}?page=0
+
+### 12. Validation Error - Invalid page (negative)
+GET {{apiUrl}}?page=-1
+
+### 13. Validation Error - Invalid limit (zero)
+GET {{apiUrl}}?limit=0
+
+### 14. Validation Error - Invalid limit (negative)
+GET {{apiUrl}}?limit=-5
+
+### 15. Validation Error - Invalid page (non-numeric)
+GET {{apiUrl}}?page=abc
+
+### 16. Validation Error - Invalid limit (non-numeric)
+GET {{apiUrl}}?limit=xyz
+
+### 17. Validation Error - Invalid page (decimal)
+GET {{apiUrl}}?page=1.5
+
+### 18. Validation Error - Invalid limit (decimal)
+GET {{apiUrl}}?limit=10.5
+
+### 19. Edge case - Both parameters invalid
+GET {{apiUrl}}?page=-1&limit=100
+
+### 20. Edge case - Empty string parameters
+GET {{apiUrl}}?page=&limit=
+
+###############################################################################
+# GET /api/generations/:id - Get generation details by ID
+###############################################################################
+
+### 1. Get generation by ID - Valid existing ID (assuming ID 1 exists)
+GET {{apiUrl}}/1
+
+### 2. Get generation by ID - Valid existing ID (assuming ID 2 exists)
+GET {{apiUrl}}/2
+
+### 3. Get generation by ID - Valid existing ID (assuming ID 10 exists)
+GET {{apiUrl}}/10
+
+### 4. Not Found - Non-existent ID
+GET {{apiUrl}}/999999
+
+### 5. Validation Error - Invalid ID (negative number)
+GET {{apiUrl}}/-1
+
+### 6. Validation Error - Invalid ID (zero)
+GET {{apiUrl}}/0
+
+### 7. Validation Error - Invalid ID (non-numeric string)
+GET {{apiUrl}}/abc
+
+### 8. Validation Error - Invalid ID (decimal number)
+GET {{apiUrl}}/1.5
+
+### 9. Validation Error - Invalid ID (special characters)
+GET {{apiUrl}}/@#$
+
+### 10. Validation Error - Invalid ID (UUID format - wrong type)
+GET {{apiUrl}}/550e8400-e29b-41d4-a716-446655440000
+
+###############################################################################
+# Expected Responses
+###############################################################################
+
+# GET /api/generations - Success Response (200 OK):
+# {
+#   "data": [
+#     {
+#       "id": 123,
+#       "generated_count": 10,
+#       "accepted_count": 8,
+#       "acceptance_rate": 0.8,
+#       "created_at": "2025-10-25T10:00:00Z",
+#       "updated_at": "2025-10-25T10:05:00Z"
+#     },
+#     {
+#       "id": 122,
+#       "generated_count": 5,
+#       "accepted_count": 5,
+#       "acceptance_rate": 1.0,
+#       "created_at": "2025-10-24T14:30:00Z",
+#       "updated_at": "2025-10-24T14:35:00Z"
+#     },
+#     {
+#       "id": 121,
+#       "generated_count": 7,
+#       "accepted_count": null,
+#       "acceptance_rate": 0,
+#       "created_at": "2025-10-23T09:15:00Z",
+#       "updated_at": "2025-10-23T09:15:00Z"
+#     }
+#   ],
+#   "pagination": {
+#     "page": 1,
+#     "limit": 20,
+#     "total": 45,
+#     "total_pages": 3
+#   }
+# }
+
+# GET /api/generations - Empty List Response (200 OK):
+# {
+#   "data": [],
+#   "pagination": {
+#     "page": 1,
+#     "limit": 20,
+#     "total": 0,
+#     "total_pages": 0
+#   }
+# }
+
+# GET /api/generations - Validation Error Response (400):
+# {
+#   "error": {
+#     "code": "VALIDATION_ERROR",
+#     "message": "Invalid query parameters",
+#     "details": {
+#       "issues": [
+#         {
+#           "code": "too_big",
+#           "maximum": 50,
+#           "type": "number",
+#           "inclusive": true,
+#           "exact": false,
+#           "message": "Limit cannot exceed 50",
+#           "path": ["limit"]
+#         }
+#       ]
+#     }
+#   }
+# }
+
+# POST /api/generations - Success Response (201 Created):
+# {
+#   "generation": {
+#     "id": 1,
+#     "user_id": "76fede39-2c1e-4c2c-90ed-e45372846068",
+#     "generated_count": 5,
+#     "accepted_count": 0,
+#     "created_at": "2025-11-15T10:00:00Z",
+#     "updated_at": "2025-11-15T10:00:00Z"
+#   },
+#   "proposals": [
+#     {
+#       "id": 1,
+#       "generation_id": 1,
+#       "front": "What is the capital of France?",
+#       "back": "Paris",
+#       "status": "pending",
+#       "created_at": "2025-11-15T10:00:00Z"
+#     }
+#   ]
+# }
+
+# POST /api/generations - Validation Error Response (400):
+# {
+#   "error": {
+#     "code": "VALIDATION_ERROR",
+#     "message": "Request validation failed",
+#     "details": {
+#       "issues": [
+#         {
+#           "code": "too_small",
+#           "minimum": 1000,
+#           "type": "string",
+#           "inclusive": true,
+#           "exact": false,
+#           "message": "Text must be at least 1000 characters long",
+#           "path": ["text"]
+#         }
+#       ]
+#     }
+#   }
+# }
+
+# POST /api/generations - AI Service Error Response (503):
+# {
+#   "error": {
+#     "code": "AI_SERVICE_ERROR",
+#     "message": "Failed to generate flashcards using AI service",
+#     "details": {
+#       "originalError": "..."
+#     }
+#   }
+# }
+
+# GET /api/generations/:id - Success Response (200 OK):
+# {
+#   "id": 1,
+#   "user_id": "76fede39-2c1e-4c2c-90ed-e45372846068",
+#   "generated_count": 8,
+#   "accepted_count": 6,
+#   "created_at": "2025-10-25T10:00:00Z",
+#   "updated_at": "2025-10-25T10:05:00Z"
+# }
+
+# GET /api/generations/:id - Not Found Response (404):
+# {
+#   "error": {
+#     "code": "NOT_FOUND",
+#     "message": "Generation with ID 999999 not found"
+#   }
+# }
+
+# GET /api/generations/:id - Validation Error Response (400):
+# {
+#   "error": {
+#     "code": "VALIDATION_ERROR",
+#     "message": "Invalid generation ID",
+#     "details": {
+#       "formErrors": [],
+#       "fieldErrors": {}
+#     }
+#   }
+# }
+
+# Internal Server Error Response (500):
+# {
+#   "error": {
+#     "code": "INTERNAL_ERROR",
+#     "message": "An unexpected error occurred",
+#     "details": {
+#       "error": "..."
+#     }
+#   }
+# }
+

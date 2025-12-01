@@ -1,0 +1,670 @@
+### Variables
+@baseUrl = http://localhost:3000
+@apiUrl = {{baseUrl}}/api/flashcards
+
+###############################################################################
+# GET /api/flashcards - List all flashcards with pagination and sorting
+###############################################################################
+
+### 1. List flashcards - Default parameters (page=1, limit=50, sort=created_at, order=desc)
+GET {{apiUrl}}
+
+### 2. List flashcards - Custom page and limit
+GET {{apiUrl}}?page=2&limit=10
+
+### 3. List flashcards - Sort by due_date ascending
+GET {{apiUrl}}?sort=due_date&order=asc
+
+### 4. List flashcards - Sort by updated_at descending
+GET {{apiUrl}}?sort=updated_at&order=desc
+
+### 5. List flashcards - First page with small limit
+GET {{apiUrl}}?page=1&limit=5
+
+### 6. List flashcards - Maximum limit (100)
+GET {{apiUrl}}?page=1&limit=100
+
+### 7. List flashcards - All parameters combined
+GET {{apiUrl}}?page=1&limit=20&sort=created_at&order=asc
+
+### 8. Validation Error - Invalid sort field
+GET {{apiUrl}}?sort=invalid_field
+
+### 9. Validation Error - Invalid order value
+GET {{apiUrl}}?order=invalid
+
+### 10. Validation Error - Limit exceeds maximum (>100)
+GET {{apiUrl}}?limit=150
+
+### 11. Validation Error - Negative page number
+GET {{apiUrl}}?page=-1
+
+### 12. Validation Error - Zero page number
+GET {{apiUrl}}?page=0
+
+### 13. Validation Error - Non-numeric page
+GET {{apiUrl}}?page=abc
+
+### 14. Validation Error - Non-numeric limit
+GET {{apiUrl}}?limit=xyz
+
+### 15. Edge Case - Page beyond available data
+GET {{apiUrl}}?page=9999
+
+### 16. Edge Case - Very large limit (at boundary)
+GET {{apiUrl}}?limit=100&page=1
+
+###############################################################################
+# POST /api/flashcards - Create a single flashcard
+###############################################################################
+
+### 17. Create a single flashcard - Manual (Success Case)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "What is the capital of France?",
+  "back": "Paris",
+  "generation_type": "manual"
+}
+
+### 18. Validation Error - AI type (Not Supported)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "What is TypeScript?",
+  "back": "TypeScript is a strongly typed programming language that builds on JavaScript",
+  "generation_type": "ai"
+}
+
+### 19. Validation Error - Empty front
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "",
+  "back": "Some answer",
+  "generation_type": "manual"
+}
+
+### 20. Validation Error - Missing generation_type field
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "What is the question?",
+  "back": "An answer"
+}
+
+### 21. Validation Error - Missing back field
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "What is the question?",
+  "generation_type": "manual"
+}
+
+### 22. Validation Error - Invalid generation_type
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "Question here",
+  "back": "Answer here",
+  "generation_type": "invalid"
+}
+
+### 23. Validation Error - Front text too long (>200 chars)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+  "back": "Answer",
+  "generation_type": "manual"
+}
+
+### 24. Validation Error - Back text too long (>500 chars)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "Question",
+  "back": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.",
+  "generation_type": "manual"
+}
+
+### 25. Invalid JSON (Malformed Request)
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "What is this?",
+  "back": "Invalid JSON
+  "generation_type": "manual"
+}
+
+### 26. Create flashcard with special characters
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "What is the formula for E=mc²?",
+  "back": "Energy equals mass times the speed of light squared: E = mc²",
+  "generation_type": "manual"
+}
+
+### 27. Create flashcard with emojis
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "What does 🚀 mean in tech context?",
+  "back": "🚀 typically represents deployment, launch, or rapid growth in technology",
+  "generation_type": "manual"
+}
+
+###############################################################################
+# GET /api/flashcards/:id - Retrieve a single flashcard
+###############################################################################
+
+### 28. Get flashcard by ID - Success Case
+# First create a flashcard, then use its ID in the next request
+# Replace {flashcard_id} with an actual UUID from a created flashcard
+GET {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+
+### 29. Get flashcard - Invalid UUID format
+GET {{apiUrl}}/invalid-uuid-format
+
+### 30. Get flashcard - Valid UUID but non-existent flashcard
+GET {{apiUrl}}/00000000-0000-0000-0000-000000000000
+
+### 31. Get flashcard - Empty ID
+GET {{apiUrl}}/
+
+### 32. Get flashcard - UUID with wrong format (too short)
+GET {{apiUrl}}/123
+
+### 33. Get flashcard - UUID with special characters
+GET {{apiUrl}}/550e8400-e29b-41d4-a716-44665544000@
+
+###############################################################################
+# PUT /api/flashcards/:id - Update a flashcard's content
+###############################################################################
+
+### 34. Update flashcard - Success Case
+# Replace {flashcard_id} with an actual UUID from a created flashcard
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "What is the capital of Germany?",
+  "back": "Berlin"
+}
+
+### 35. Update flashcard - Success with special characters
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "What is Einstein's equation?",
+  "back": "E = mc² (Energy equals mass times the speed of light squared)"
+}
+
+### 36. Update flashcard - Success with emojis
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "What does 💡 represent?",
+  "back": "💡 represents an idea, innovation, or moment of insight"
+}
+
+### 37. Update flashcard - Success with maximum length
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "This is a very long question that tests the maximum allowed length for the front side of a flashcard. It should be exactly 200 characters long to test the boundary condition properly. Let's count",
+  "back": "This is a very long answer that tests the maximum allowed length for the back side of a flashcard. It should be exactly 500 characters long to test the boundary condition properly. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat."
+}
+
+### 38. Validation Error - Empty front field
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "",
+  "back": "Some answer"
+}
+
+### 39. Validation Error - Empty back field
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "Some question",
+  "back": ""
+}
+
+### 40. Validation Error - Missing front field
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "back": "Some answer"
+}
+
+### 41. Validation Error - Missing back field
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "Some question"
+}
+
+### 42. Validation Error - Front text too long (>200 chars)
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+  "back": "Answer"
+}
+
+### 43. Validation Error - Back text too long (>500 chars)
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "Question",
+  "back": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam."
+}
+
+### 44. Validation Error - Invalid UUID format
+PUT {{apiUrl}}/invalid-uuid-format
+Content-Type: application/json
+
+{
+  "front": "Updated question",
+  "back": "Updated answer"
+}
+
+### 45. Validation Error - Malformed JSON
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "Question",
+  "back": "Answer without closing quote
+}
+
+### 46. Validation Error - Wrong data types
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": 123,
+  "back": true
+}
+
+### 47. Validation Error - Extra fields (should be ignored or rejected)
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "Question",
+  "back": "Answer",
+  "generation_type": "manual",
+  "interval": 5,
+  "ease_factor": 3.0
+}
+
+### 48. Not Found - Valid UUID but non-existent flashcard
+PUT {{apiUrl}}/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+
+{
+  "front": "Updated question",
+  "back": "Updated answer"
+}
+
+### 49. Not Found - Flashcard belonging to another user (if RLS is working)
+# This should return 404 even if the flashcard exists, because RLS filters it out
+PUT {{apiUrl}}/99999999-9999-9999-9999-999999999999
+Content-Type: application/json
+
+{
+  "front": "Trying to update someone else's flashcard",
+  "back": "This should fail with 404"
+}
+
+### 50. Edge Case - Minimal valid content (1 character each)
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "Q",
+  "back": "A"
+}
+
+### 51. Edge Case - Update with whitespace only (should fail)
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "   ",
+  "back": "   "
+}
+
+### 52. Edge Case - Update with newlines and special formatting
+PUT {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+Content-Type: application/json
+
+{
+  "front": "What is a\nmultiline\nquestion?",
+  "back": "This is a multiline answer:\n1. First point\n2. Second point\n3. Third point"
+}
+
+###############################################################################
+# DELETE /api/flashcards/:id - Delete a flashcard permanently
+###############################################################################
+
+### 53. Delete flashcard - Success Case
+# First create a flashcard using test #17, then use its ID here
+# Replace {flashcard_id} with an actual UUID from a created flashcard
+DELETE {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454
+
+### 54. Delete flashcard - Success Case (Create and Delete)
+# Step 1: Create a flashcard
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "This flashcard will be deleted",
+  "back": "Temporary flashcard for deletion test",
+  "generation_type": "manual"
+}
+
+### 55. Delete flashcard - Step 2: Delete the created flashcard
+# Copy the ID from the response above and use it here
+DELETE {{apiUrl}}/1b419dac-4967-4dad-b90e-3157220a524b
+
+### 56. Validation Error - Invalid UUID format
+DELETE {{apiUrl}}/invalid-uuid-format
+
+### 57. Validation Error - UUID with wrong format (too short)
+DELETE {{apiUrl}}/123
+
+### 58. Validation Error - UUID with special characters
+DELETE {{apiUrl}}/550e8400-e29b-41d4-a716-44665544000@
+
+### 59. Validation Error - Empty ID (should route to list endpoint)
+DELETE {{apiUrl}}/
+
+### 60. Not Found - Valid UUID but non-existent flashcard
+DELETE {{apiUrl}}/00000000-0000-0000-0000-000000000000
+
+### 61. Not Found - Flashcard belonging to another user (if RLS is working)
+# This should return 404 even if the flashcard exists, because RLS filters it out
+DELETE {{apiUrl}}/99999999-9999-9999-9999-999999999999
+
+### 62. Edge Case - Delete same flashcard twice (idempotency test)
+# First deletion should succeed (204), second should fail (404)
+# Step 1: Create a flashcard
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "Flashcard for idempotency test",
+  "back": "This will be deleted twice",
+  "generation_type": "manual"
+}
+
+### 63. Edge Case - Delete same flashcard twice - First deletion
+# Copy the ID from the response above
+DELETE {{apiUrl}}/REPLACE_WITH_ID_FROM_ABOVE
+
+### 64. Edge Case - Delete same flashcard twice - Second deletion (should fail)
+# Use the same ID as above - should return 404
+DELETE {{apiUrl}}/REPLACE_WITH_ID_FROM_ABOVE
+
+### 65. Edge Case - Try to get deleted flashcard (should return 404)
+# Use the ID from a deleted flashcard
+GET {{apiUrl}}/REPLACE_WITH_DELETED_FLASHCARD_ID
+
+### 66. Edge Case - Try to update deleted flashcard (should return 404)
+# Use the ID from a deleted flashcard
+PUT {{apiUrl}}/REPLACE_WITH_DELETED_FLASHCARD_ID
+Content-Type: application/json
+
+{
+  "front": "Trying to update deleted flashcard",
+  "back": "This should fail with 404"
+}
+
+###############################################################################
+# POST /api/flashcards/:id/review - Submit a review for a flashcard (SM-2)
+###############################################################################
+
+### 67. Review flashcard - Quality 5 (Perfect response)
+# Replace {flashcard_id} with an actual UUID from a created flashcard
+POST {{apiUrl}}/ca3abb76-7462-4ca7-8cc9-f2d6f1f870b8/review
+Content-Type: application/json
+
+{
+  "quality": 5
+}
+
+### 68. Review flashcard - Quality 4 (Correct with hesitation)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 4
+}
+
+### 69. Review flashcard - Quality 3 (Correct with significant effort)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 3
+}
+
+### 70. Review flashcard - Quality 2 (Incorrect, but easy to recall)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 2
+}
+
+### 71. Review flashcard - Quality 1 (Incorrect, but familiar)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 1
+}
+
+### 72. Review flashcard - Quality 0 (Complete blackout)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 0
+}
+
+### 73. Validation Error - Quality below minimum (-1)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": -1
+}
+
+### 74. Validation Error - Quality above maximum (6)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 6
+}
+
+### 75. Validation Error - Quality as string
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": "5"
+}
+
+### 76. Validation Error - Quality as float (not integer)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 3.5
+}
+
+### 77. Validation Error - Missing quality field
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+}
+
+### 78. Validation Error - Quality as null
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": null
+}
+
+### 79. Validation Error - Quality as boolean
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": true
+}
+
+### 80. Validation Error - Extra fields (should be ignored)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 4,
+  "extra_field": "should be ignored",
+  "interval": 10
+}
+
+### 81. Validation Error - Invalid UUID format
+POST {{apiUrl}}/invalid-uuid-format/review
+Content-Type: application/json
+
+{
+  "quality": 3
+}
+
+### 82. Validation Error - Malformed JSON
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 3
+  "missing": "comma"
+}
+
+### 83. Not Found - Valid UUID but non-existent flashcard
+POST {{apiUrl}}/00000000-0000-0000-0000-000000000000/review
+Content-Type: application/json
+
+{
+  "quality": 3
+}
+
+### 84. Not Found - Flashcard belonging to another user (if RLS is working)
+# This should return 404 even if the flashcard exists, because RLS filters it out
+POST {{apiUrl}}/99999999-9999-9999-9999-999999999999/review
+Content-Type: application/json
+
+{
+  "quality": 3
+}
+
+### 85. Complete Flow - Create, Review multiple times, then Delete
+# Step 1: Create a flashcard
+POST {{apiUrl}}
+Content-Type: application/json
+
+{
+  "front": "What is the SM-2 algorithm?",
+  "back": "A spaced repetition algorithm used for optimal learning intervals",
+  "generation_type": "manual"
+}
+
+### 86. Complete Flow - Step 2: First review (Quality 3)
+# Copy the ID from the response above
+POST {{apiUrl}}/REPLACE_WITH_ID_FROM_ABOVE/review
+Content-Type: application/json
+
+{
+  "quality": 3
+}
+
+### 87. Complete Flow - Step 3: Second review (Quality 4)
+# Use the same ID as above
+POST {{apiUrl}}/REPLACE_WITH_ID_FROM_ABOVE/review
+Content-Type: application/json
+
+{
+  "quality": 4
+}
+
+### 88. Complete Flow - Step 4: Third review (Quality 5)
+# Use the same ID as above
+POST {{apiUrl}}/REPLACE_WITH_ID_FROM_ABOVE/review
+Content-Type: application/json
+
+{
+  "quality": 5
+}
+
+### 89. Complete Flow - Step 5: Get the flashcard to see updated SM-2 parameters
+# Use the same ID as above
+GET {{apiUrl}}/REPLACE_WITH_ID_FROM_ABOVE
+
+### 90. Complete Flow - Step 6: Delete the flashcard
+# Use the same ID as above
+DELETE {{apiUrl}}/REPLACE_WITH_ID_FROM_ABOVE
+
+### 91. Edge Case - Review deleted flashcard (should return 404)
+# Use the ID from a deleted flashcard
+POST {{apiUrl}}/REPLACE_WITH_DELETED_FLASHCARD_ID/review
+Content-Type: application/json
+
+{
+  "quality": 3
+}
+
+### 92. Edge Case - Review with quality at boundaries (0)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 0
+}
+
+### 93. Edge Case - Review with quality at boundaries (5)
+POST {{apiUrl}}/43b296c8-f3f4-4ec8-9fdb-c42525ac5454/review
+Content-Type: application/json
+
+{
+  "quality": 5
+}
+
