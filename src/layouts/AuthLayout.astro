@@ -7,7 +7,7 @@ interface Props {
   description?: string;
 }
 
-const { title = "10xDevs — Autoryzacja", description = "Zaloguj się lub utwórz konto 10xDevs" }: Props = Astro.props;
+const { title = "10xCards — Autoryzacja", description = "Zaloguj się lub utwórz konto 10xCards" }: Props = Astro.props;
 ---
 
 <!doctype html>
@@ -32,12 +32,7 @@ const { title = "10xDevs — Autoryzacja", description = "Zaloguj się lub utwó
         href="/"
         class="mb-8 flex items-center gap-3 text-lg font-semibold text-foreground transition hover:text-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
       >
-        <span
-          class="flex size-11 items-center justify-center rounded-2xl bg-primary/10 text-base font-bold text-primary"
-        >
-          10x
-        </span>
-        <span>10xDevs</span>
+        <span>10xCards</span>
       </a>
       <div id="auth-content" tabindex="-1" class="w-full max-w-md">
         <slot />

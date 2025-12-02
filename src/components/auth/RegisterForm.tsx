@@ -69,7 +69,7 @@ export function RegisterForm() {
     <Card>
       <CardHeader>
         <CardTitle>Załóż darmowe konto</CardTitle>
-        <CardDescription>Dołącz do 10xDevs i przyspieszaj naukę dzięki inteligentnym fiszkom.</CardDescription>
+        <CardDescription>Dołącz do 10xCards i przyspieszaj naukę dzięki inteligentnym fiszkom.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         {serverError ? (

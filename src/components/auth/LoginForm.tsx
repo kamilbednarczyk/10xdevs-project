@@ -139,7 +139,7 @@ export function LoginForm() {
         </div>
         <p className="text-center text-xs">
           Masz problem z logowaniem?{" "}
-          <a className="font-medium text-primary hover:underline" href="mailto:support@10xdevs.com">
+          <a className="font-medium text-primary hover:underline" href="mailto:support@10xcards.com">
             Skontaktuj się z nami
           </a>
         </p>
