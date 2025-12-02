@@ -105,11 +105,7 @@ export function FlashcardsView() {
     <section className="space-y-6">
       <div className="grid gap-4 border-b border-border/40 pb-6 md:grid-cols-[2fr_1fr] md:items-center">
         <div className="space-y-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/70">Kolekcja</p>
           <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">Moje fiszki</h2>
-          <p className="text-sm text-muted-foreground">
-            Zarządzaj ręcznie tworzonymi fiszkami, usuwaj niepotrzebne pozycje i utrzymuj porządek w bazie wiedzy.
-          </p>
         </div>
         <div className="flex flex-wrap justify-end gap-3">
           <Button

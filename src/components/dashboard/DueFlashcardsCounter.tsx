@@ -11,9 +11,5 @@ export function DueFlashcardsCounter({ count }: DueFlashcardsCounterProps) {
     );
   }
 
-  return (
-    <p className="text-base font-medium text-foreground">
-      Masz {count} {count === 1 ? "fiszkę" : "fiszek"} do powtórki.
-    </p>
-  );
+  return <p className="text-base font-medium text-foreground">Liczba fiszek do powtórki: {count}</p>;
 }

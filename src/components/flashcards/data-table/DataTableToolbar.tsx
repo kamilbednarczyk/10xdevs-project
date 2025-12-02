@@ -9,7 +9,7 @@ export function DataTableToolbar({ total, isLoading }: DataTableToolbarProps) {
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-primary/70">Podsumowanie</p>
         <p className="mt-1 text-base text-foreground">
-          Łącznie <span className="font-semibold">{total}</span> fiszek w kolekcji
+          Łącznie fiszek w kolekcji: <span className="font-semibold">{total}</span>
         </p>
       </div>
       <p>{isLoading ? "Odświeżanie danych..." : "Dane aktualne."}</p>
