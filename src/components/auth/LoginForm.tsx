@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { LoginSchema, type LoginSchemaType } from "@/lib/schemas/auth.schema";
 import { getUnknownErrorMessage, readApiErrorMessage } from "@/lib/utils";
+import { useToast } from "@/lib/hooks/useToast";
 
 const defaultLoginError = "Nieprawidłowy email lub hasło. Spróbuj ponownie.";
 
@@ -29,6 +30,30 @@ export function LoginForm() {
 
   const [serverError, setServerError] = useState<string | null>(null);
   const [serverSuccess, setServerSuccess] = useState<string | null>(null);
+  const { showToast } = useToast();
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const url = new URL(window.location.href);
+    const status = url.searchParams.get("status");
+
+    if (status !== "password-updated") {
+      return;
+    }
+
+    showToast({
+      title: "Hasło zostało zaktualizowane",
+      description: "Możesz zalogować się nowym hasłem.",
+      variant: "success",
+    });
+
+    url.searchParams.delete("status");
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+    window.history.replaceState(window.history.state, "", nextUrl);
+  }, [showToast]);
 
   const onSubmit = handleSubmit(async (values) => {
     setServerError(null);

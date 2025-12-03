@@ -34,7 +34,12 @@ export const UpdatePasswordSchema = z
     path: ["confirmPassword"],
   });
 
+export const UpdatePasswordServerSchema = z.object({
+  password: passwordField,
+});
+
 export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type RegisterSchemaType = z.infer<typeof RegisterSchema>;
 export type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>;
 export type UpdatePasswordSchemaType = z.infer<typeof UpdatePasswordSchema>;
+export type UpdatePasswordServerSchemaType = z.infer<typeof UpdatePasswordServerSchema>;
