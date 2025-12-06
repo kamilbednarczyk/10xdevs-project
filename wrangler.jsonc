@@ -12,7 +12,7 @@
       "cwd": "."
     },
     "assets": {
-      "binding": "ASSETS",
+      "binding": "STATIC_ASSETS",
       "directory": "./dist"
     },
     "observability": {
