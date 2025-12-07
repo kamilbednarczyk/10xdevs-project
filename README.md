@@ -75,7 +75,7 @@ This project ships with the `@astrojs/cloudflare` adapter and a `wrangler.jsonc`
    Wrangler loads `.dev.vars` automatically and serves the worker on `http://localhost:8787`.
 4. **Deploy**
    ```bash
-   npx wrangler pages deploy dist
+   npx wrangler deploy
    ```
 
 ### Required environment variables
